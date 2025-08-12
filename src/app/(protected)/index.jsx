@@ -3,7 +3,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Link } from "expo-router";
 
-export default function Index() {
+export default function AllFavoritesScreen() {
   return (
     <View className="flex-1 items-center justify-center gap-y-2">
       <Text className="text-lg text-purple-700">You Are Him.</Text>
