@@ -1,9 +1,9 @@
-const artImg = require("../assets/images/art-museum.png");
-const bookstoreImg = require("../assets/images/bookstore.png");
-const parkImg = require("../assets/images/central-park.png");
-const coffeeImg = require("../assets/images/coffee-bean.png");
-const restaurantImg = require("../assets/images/restaurant.png");
-const beachImg = require("../assets/images/sunny-beach.png");
+const artImg = require("../../assets/images/art-museum.png");
+const bookstoreImg = require("../../assets/images/bookstore.png");
+const parkImg = require("../../assets/images/central-park.png");
+const coffeeImg = require("../../assets/images/coffee-bean.png");
+const restaurantImg = require("../../assets/images/restaurant.png");
+const beachImg = require("../../assets/images/sunny-beach.png");
 
 export const favorites = [
   {
