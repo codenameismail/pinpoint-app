@@ -21,8 +21,6 @@ const FavoriteList = ({ favorites }) => {
       keyExtractor={(favorite) => favorite.id}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
-        paddingHorizontal: 16,
-        paddingBottom: 16,
         rowGap: 16,
       }}
       numColumns={2}
