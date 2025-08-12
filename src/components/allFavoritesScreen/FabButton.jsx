@@ -3,12 +3,15 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 
-const FabButton = ({ onPress }) => {
+const FabButton = () => {
+  const router = useRouter();
+  const handlePress = () => router.push("/(protected)/favorite/new");
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       className="group absolute bottom-8 right-8 h-14 w-14 items-center justify-center rounded-full bg-black shadow-lg shadow-purple-200 active:scale-95 active:opacity-80"
     >
       <Ionicons
