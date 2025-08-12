@@ -1,18 +1,24 @@
 import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
+import FavoriteList from "../../components/allFavoritesScreen/FavoriteList";
+
+import { favorites } from "../../../data/favorites";
 
 export default function AllFavoritesScreen() {
   return (
-    <View className="flex-1 items-center justify-center gap-y-2">
-      <Text className="text-lg text-purple-700">You Are Him.</Text>
-      <Link href="/second" className="text-lg text-blue-500 underline" push>
-        Go to Second Screen
-      </Link>
-      <Link href="/third" className="text-lg text-blue-500 underline" push>
-        Go to Third Screen
-      </Link>
-    </View>
+    <SafeAreaView className="flex-1" edges={["top", "right", "left"]}>
+      {/* Favorites Grid */}
+      <FavoriteList favorites={favorites} />
+
+      {/* Floating Add Button */}
+      <View className="absolute bottom-8 right-6">
+        <TouchableOpacity className="h-14 w-14 items-center justify-center rounded-full bg-purple-600 shadow-lg">
+          <Ionicons name="add" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
