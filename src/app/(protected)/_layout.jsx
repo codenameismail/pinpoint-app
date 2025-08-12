@@ -9,10 +9,11 @@ export default function ProtectedLayout() {
         name="index"
         options={{
           title: "All Favorites",
-          headerStyle: { backgroundColor: "#f4511e" },
-          headerTintColor: "#fff",
+          headerStyle: { backgroundColor: "#fff" },
+          headerTintColor: "#000",
           headerTitleStyle: { fontWeight: "bold" },
           headerTitleAlign: "center",
+          headerShown: false,
         }}
       />
     </Stack>
