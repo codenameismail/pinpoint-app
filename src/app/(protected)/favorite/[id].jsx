@@ -1,12 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { View, Text, Image, ScrollView, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  Alert,
+  ImageBackground,
+} from "react-native";
 
+import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
+
+import { formatDate } from "../../../utils/helpers";
 import { cn } from "../../../utils/cn";
-
 import { favorites } from "../../../data/favorites";
 
 const FavoriteDetailScreen = () => {
@@ -48,33 +57,46 @@ const FavoriteDetailScreen = () => {
     router.back();
   };
 
-  return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
-      {/* Header with Back Button */}
-      <View className="absolute left-4 top-12 z-10">
-        <Pressable
-          onPress={handleBack}
-          className="h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg active:scale-95"
-        >
-          <Ionicons name="arrow-back" size={24} color="#000" />
-        </Pressable>
-      </View>
+  const dateAdded = formatDate(favoritePlace.dateAdded);
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+  const displayCoordinate = (numOfDecimals) => {
+    return `${favoritePlace.location.latitude.toFixed(numOfDecimals)}, ${favoritePlace.location.longitude.toFixed(numOfDecimals)}`;
+  };
+
+  return (
+    <>
+      <StatusBar style="light" />
+
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="never"
+      >
+        {/* Header with Back Button */}
+        <View className="absolute left-4 top-16 z-10">
+          <Pressable
+            onPress={handleBack}
+            className="h-12 w-12 items-center justify-center rounded-full bg-gray-200 shadow-lg active:scale-95"
+          >
+            <Ionicons name="arrow-back" size={24} color="#000" />
+          </Pressable>
+        </View>
         {/* Hero Image */}
         <View className="relative">
-          <Image
+          <ImageBackground
             source={favoritePlace.image}
-            className="h-80 w-full"
+            className="h-96 w-full"
             resizeMode="cover"
-          />
-
-          {/* Gradient Overlay */}
-          <View className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/20 to-transparent" />
+          >
+            <LinearGradient
+              colors={["transparent", "rgba(0,0,0,0.7)"]}
+              style={{ flex: 1 }}
+            />
+          </ImageBackground>
         </View>
 
         {/* Content Container */}
-        <View className="-mt-6 flex-1 rounded-t-3xl bg-white px-6 pt-8">
+        <View className="-mt-8 flex-1 rounded-t-[30px] bg-white px-6 pt-8">
           {/* Title and Action Buttons */}
           <View className="mb-6">
             <View className="mb-4 flex-row items-start justify-between">
@@ -125,8 +147,7 @@ const FavoriteDetailScreen = () => {
                 <Ionicons name="map" size={48} color="#3B82F6" />
                 <Text className="mt-2 font-medium text-blue-700">Map View</Text>
                 <Text className="px-4 text-center text-sm text-blue-600">
-                  {favoritePlace.location.latitude.toFixed(6)},{" "}
-                  {favoritePlace.location.longitude.toFixed(6)}
+                  {displayCoordinate(6)}
                 </Text>
               </View>
             </View>
@@ -143,62 +164,29 @@ const FavoriteDetailScreen = () => {
           </View>
 
           {/* Additional Info */}
-          <View className="mb-8">
+          <View className="pb-16">
             <Text className="mb-3 text-lg font-semibold text-gray-900">
               Details
             </Text>
 
-            <View className="space-y-3">
+            <View className="gap-y-3">
               <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
                 <Text className="text-gray-600">Added on</Text>
-                <Text className="font-medium text-gray-900">
-                  {favoritePlace.dateAdded.toLocaleDateString()}
-                </Text>
+                <Text className="font-medium text-gray-900">{dateAdded}</Text>
               </View>
 
               <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
                 <Text className="text-gray-600">Coordinates</Text>
                 <Text className="font-medium text-gray-900">
-                  {favoritePlace.location.latitude.toFixed(4)},{" "}
-                  {favoritePlace.location.longitude.toFixed(4)}
+                  {displayCoordinate(4)}
                 </Text>
               </View>
             </View>
           </View>
-
-          {/* Action Buttons at Bottom */}
-          <View className="space-y-3 pb-8">
-            <Pressable className="active:scale-98 w-full rounded-2xl bg-black py-4 active:opacity-90">
-              <Text className="text-center text-lg font-semibold text-white">
-                Get Directions
-              </Text>
-            </Pressable>
-
-            <Pressable className="active:scale-98 w-full rounded-2xl bg-gray-100 py-4 active:bg-gray-200">
-              <Text className="text-center text-lg font-semibold text-gray-900">
-                Share Location
-              </Text>
-            </Pressable>
-          </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
-};
-
-FavoriteDetailScreen.propTypes = {
-  favorite: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    image: PropTypes.any.isRequired,
-    description: PropTypes.string.isRequired,
-    dateAdded: PropTypes.instanceOf(Date).isRequired,
-    location: PropTypes.shape({
-      latitude: PropTypes.number.isRequired,
-      longitude: PropTypes.number.isRequired,
-      address: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
 };
 
 export default FavoriteDetailScreen;
