@@ -25,6 +25,7 @@ export default function ProtectedLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen name="favorite/new" options={{ headerShown: false }} />
     </Stack>
   );
 }
