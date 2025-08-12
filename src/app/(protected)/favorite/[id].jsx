@@ -1,16 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, Text, Image, ScrollView, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { View, Text, Image, ScrollView, Pressable, Alert } from "react-native";
 
-import { cn } from "../../utils/cn";
+import { cn } from "../../../utils/cn";
 
-const FavoriteDetailScreen = ({ favorite }) => {
+import { favorites } from "../../../data/favorites";
+
+const FavoriteDetailScreen = () => {
+  const params = useLocalSearchParams();
+
+  const id = params.id ?? "f1";
+
+  // find the favoritePlace to show
+  const favoritePlace = favorites.find((fav) => fav.id === id);
+
   const handleEdit = () => {
     // Navigate to edit screen or show edit modal
-    console.log("Edit favorite:", favorite.id);
+    console.log("Edit favorite:", favoritePlace.id);
   };
 
   const handleDelete = () => {
@@ -27,11 +36,11 @@ const FavoriteDetailScreen = ({ favorite }) => {
           style: "destructive",
           onPress: () => {
             // Handle delete logic here
-            console.log("Delete favorite:", favorite.id);
+            console.log("Delete favorite:", favoritePlace.id);
             router.back();
           },
         },
-      ]
+      ],
     );
   };
 
@@ -42,7 +51,7 @@ const FavoriteDetailScreen = ({ favorite }) => {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
       {/* Header with Back Button */}
-      <View className="absolute top-12 left-4 z-10">
+      <View className="absolute left-4 top-12 z-10">
         <Pressable
           onPress={handleBack}
           className="h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg active:scale-95"
@@ -55,43 +64,43 @@ const FavoriteDetailScreen = ({ favorite }) => {
         {/* Hero Image */}
         <View className="relative">
           <Image
-            source={favorite.image}
+            source={favoritePlace.image}
             className="h-80 w-full"
             resizeMode="cover"
           />
-          
+
           {/* Gradient Overlay */}
           <View className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/20 to-transparent" />
         </View>
 
         {/* Content Container */}
-        <View className="flex-1 bg-white -mt-6 rounded-t-3xl px-6 pt-8">
+        <View className="-mt-6 flex-1 rounded-t-3xl bg-white px-6 pt-8">
           {/* Title and Action Buttons */}
           <View className="mb-6">
             <View className="mb-4 flex-row items-start justify-between">
               <View className="flex-1 pr-4">
-                <Text className="text-3xl font-bold text-gray-900 leading-tight">
-                  {favorite.title}
+                <Text className="text-3xl font-bold leading-tight text-gray-900">
+                  {favoritePlace.title}
                 </Text>
               </View>
-              
+
               {/* Action Buttons */}
               <View className="flex-row gap-3">
                 <Pressable
                   onPress={handleEdit}
                   className={cn(
                     "h-12 w-12 items-center justify-center rounded-full",
-                    "bg-blue-50 active:scale-95 active:bg-blue-100"
+                    "bg-blue-50 active:scale-95 active:bg-blue-100",
                   )}
                 >
                   <Ionicons name="pencil" size={20} color="#3B82F6" />
                 </Pressable>
-                
+
                 <Pressable
                   onPress={handleDelete}
                   className={cn(
                     "h-12 w-12 items-center justify-center rounded-full",
-                    "bg-red-50 active:scale-95 active:bg-red-100"
+                    "bg-red-50 active:scale-95 active:bg-red-100",
                   )}
                 >
                   <Ionicons name="trash-outline" size={20} color="#EF4444" />
@@ -102,23 +111,22 @@ const FavoriteDetailScreen = ({ favorite }) => {
             {/* Location */}
             <View className="flex-row items-center">
               <Ionicons name="location-outline" size={18} color="#6B7280" />
-              <Text className="ml-2 text-base text-gray-600 flex-1">
-                {favorite.location.address}
+              <Text className="ml-2 flex-1 text-base text-gray-600">
+                {favoritePlace.location.address}
               </Text>
             </View>
           </View>
 
           {/* Map Container */}
           <View className="mb-6">
-            <View className="h-48 w-full rounded-2xl bg-blue-100 overflow-hidden">
+            <View className="h-48 w-full overflow-hidden rounded-2xl bg-blue-100">
               {/* Placeholder for map - replace with actual map component */}
               <View className="flex-1 items-center justify-center bg-gradient-to-br from-blue-200 to-blue-300">
                 <Ionicons name="map" size={48} color="#3B82F6" />
-                <Text className="mt-2 text-blue-700 font-medium">
-                  Map View
-                </Text>
-                <Text className="text-sm text-blue-600 text-center px-4">
-                  {favorite.location.latitude.toFixed(6)}, {favorite.location.longitude.toFixed(6)}
+                <Text className="mt-2 font-medium text-blue-700">Map View</Text>
+                <Text className="px-4 text-center text-sm text-blue-600">
+                  {favoritePlace.location.latitude.toFixed(6)},{" "}
+                  {favoritePlace.location.longitude.toFixed(6)}
                 </Text>
               </View>
             </View>
@@ -126,47 +134,48 @@ const FavoriteDetailScreen = ({ favorite }) => {
 
           {/* Description */}
           <View className="mb-6">
-            <Text className="text-lg font-semibold text-gray-900 mb-3">
+            <Text className="mb-3 text-lg font-semibold text-gray-900">
               About this place
             </Text>
-            <Text className="text-base text-gray-700 leading-relaxed">
-              {favorite.description}
+            <Text className="text-base leading-relaxed text-gray-700">
+              {favoritePlace.description}
             </Text>
           </View>
 
           {/* Additional Info */}
           <View className="mb-8">
-            <Text className="text-lg font-semibold text-gray-900 mb-3">
+            <Text className="mb-3 text-lg font-semibold text-gray-900">
               Details
             </Text>
-            
+
             <View className="space-y-3">
-              <View className="flex-row items-center justify-between py-3 border-b border-gray-100">
+              <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
                 <Text className="text-gray-600">Added on</Text>
                 <Text className="font-medium text-gray-900">
-                  {favorite.dateAdded.toLocaleDateString()}
+                  {favoritePlace.dateAdded.toLocaleDateString()}
                 </Text>
               </View>
-              
-              <View className="flex-row items-center justify-between py-3 border-b border-gray-100">
+
+              <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
                 <Text className="text-gray-600">Coordinates</Text>
                 <Text className="font-medium text-gray-900">
-                  {favorite.location.latitude.toFixed(4)}, {favorite.location.longitude.toFixed(4)}
+                  {favoritePlace.location.latitude.toFixed(4)},{" "}
+                  {favoritePlace.location.longitude.toFixed(4)}
                 </Text>
               </View>
             </View>
           </View>
 
           {/* Action Buttons at Bottom */}
-          <View className="pb-8 space-y-3">
-            <Pressable className="w-full bg-black rounded-2xl py-4 active:scale-98 active:opacity-90">
-              <Text className="text-white text-center font-semibold text-lg">
+          <View className="space-y-3 pb-8">
+            <Pressable className="active:scale-98 w-full rounded-2xl bg-black py-4 active:opacity-90">
+              <Text className="text-center text-lg font-semibold text-white">
                 Get Directions
               </Text>
             </Pressable>
-            
-            <Pressable className="w-full bg-gray-100 rounded-2xl py-4 active:scale-98 active:bg-gray-200">
-              <Text className="text-gray-900 text-center font-semibold text-lg">
+
+            <Pressable className="active:scale-98 w-full rounded-2xl bg-gray-100 py-4 active:bg-gray-200">
+              <Text className="text-center text-lg font-semibold text-gray-900">
                 Share Location
               </Text>
             </Pressable>
