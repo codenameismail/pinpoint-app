@@ -5,9 +5,9 @@ import { View, Text, Image } from "react-native";
 
 const FavoriteCard = ({ favorite }) => {
   return (
-    <View className="mb-6 w-[48%]">
+    <View className="w-[48%] rounded-2xl bg-gray-100 p-2 pb-4 shadow-md shadow-gray-300">
       {/* Image Container */}
-      <View className="relative mb-3">
+      <View className="relative mb-3 w-full">
         <Image
           source={favorite.image}
           className="h-40 w-full rounded-2xl"

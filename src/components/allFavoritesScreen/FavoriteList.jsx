@@ -5,6 +5,7 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import FavoriteCard from "./FavoriteCard";
+import ListHeader from "./ListHeader";
 
 /** * FavoriteList component to display a list of favorite locations.
  * It uses FlatList for efficient rendering of items.
@@ -23,19 +24,13 @@ const FavoriteList = ({ favorites }) => {
       contentContainerStyle={{
         paddingHorizontal: 16,
         paddingBottom: 16,
+        rowGap: 16,
       }}
       numColumns={2}
       columnWrapperStyle={{
         justifyContent: "space-between",
       }}
-      ListHeaderComponent={() => (
-        <View className="flex-row items-center justify-between px-6 pb-6 pt-12">
-          <Text className="text-2xl font-bold text-gray-900">Favorites</Text>
-          <TouchableOpacity>
-            <Ionicons name="ellipsis-horizontal" size={24} color="#6B7280" />
-          </TouchableOpacity>
-        </View>
-      )}
+      ListHeaderComponent={() => <ListHeader />}
     />
   );
 };
