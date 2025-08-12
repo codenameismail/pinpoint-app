@@ -19,6 +19,12 @@ export default function ProtectedLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="favorite/[id]"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
