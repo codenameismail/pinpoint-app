@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
@@ -19,27 +19,33 @@ import { cn } from "../../../utils/cn";
 import { favorites } from "../../../data/favorites";
 
 const FavoriteDetailScreen = () => {
-  const params = useLocalSearchParams();
+  // Normalize param: string | string[] | undefined -> string | null
+  const { id: idParam } = useLocalSearchParams();
+  const id = Array.isArray(idParam) ? idParam[0] : idParam || null;
 
-  const id = params.id ?? "f1";
+  // Lookup and memoize the current favorite
+  const favoritePlace = useMemo(
+    () => favorites.find((fav) => fav.id === id) || null,
+    [id],
+  );
 
-  // find the favoritePlace to show
-  const favoritePlace = favorites.find((fav) => fav.id === id);
+  const handleBack = useCallback(() => {
+    router.back();
+  }, []);
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
+    if (!favoritePlace) return;
     // Navigate to edit screen or show edit modal
     console.log("Edit favorite:", favoritePlace.id);
-  };
+  }, [favoritePlace]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
+    if (!favoritePlace) return;
     Alert.alert(
       "Delete Favorite",
       "Are you sure you want to remove this place from your favorites?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
@@ -51,17 +57,40 @@ const FavoriteDetailScreen = () => {
         },
       ],
     );
-  };
+  }, [favoritePlace]);
 
-  const handleBack = () => {
-    router.back();
-  };
+  const dateAdded = useMemo(
+    () => (favoritePlace ? formatDate(favoritePlace.dateAdded) : ""),
+    [favoritePlace],
+  );
 
-  const dateAdded = formatDate(favoritePlace.dateAdded);
+  const displayCoordinate = useCallback(
+    (numOfDecimals) =>
+      favoritePlace
+        ? `${favoritePlace.location.latitude.toFixed(numOfDecimals)}, ${favoritePlace.location.longitude.toFixed(numOfDecimals)}`
+        : "",
+    [favoritePlace],
+  );
 
-  const displayCoordinate = (numOfDecimals) => {
-    return `${favoritePlace.location.latitude.toFixed(numOfDecimals)}, ${favoritePlace.location.longitude.toFixed(numOfDecimals)}`;
-  };
+  // Fallback UI if param is missing or not found
+  if (!id || !favoritePlace) {
+    return (
+      <>
+        <StatusBar style="dark" />
+        <View className="flex-1 items-center justify-center bg-white px-6">
+          <Text className="mb-4 text-base text-gray-600">
+            Favorite not found.
+          </Text>
+          <Pressable
+            onPress={handleBack}
+            className="h-12 items-center justify-center rounded-full bg-gray-200 px-5 active:scale-95"
+          >
+            <Text className="font-medium text-gray-900">Go back</Text>
+          </Pressable>
+        </View>
+      </>
+    );
+  }
 
   return (
     <>
@@ -81,6 +110,7 @@ const FavoriteDetailScreen = () => {
             <Ionicons name="arrow-back" size={24} color="#000" />
           </Pressable>
         </View>
+
         {/* Hero Image */}
         <View className="relative">
           <ImageBackground
@@ -97,7 +127,7 @@ const FavoriteDetailScreen = () => {
 
         {/* Content Container */}
         <View className="-mt-8 flex-1 rounded-t-[30px] bg-white px-6 pt-8">
-          {/* Title and Action Buttons */}
+          {/* Title and Actions */}
           <View className="mb-6">
             <View className="mb-4 flex-row items-start justify-between">
               <View className="flex-1 pr-4">
@@ -106,7 +136,6 @@ const FavoriteDetailScreen = () => {
                 </Text>
               </View>
 
-              {/* Action Buttons */}
               <View className="flex-row gap-3">
                 <Pressable
                   onPress={handleEdit}
@@ -139,11 +168,10 @@ const FavoriteDetailScreen = () => {
             </View>
           </View>
 
-          {/* Map Container */}
+          {/* Map Container (placeholder) */}
           <View className="mb-6">
             <View className="h-48 w-full overflow-hidden rounded-2xl bg-blue-100">
-              {/* Placeholder for map - replace with actual map component */}
-              <View className="flex-1 items-center justify-center bg-gradient-to-br from-blue-200 to-blue-300">
+              <View className="flex-1 items-center justify-center">
                 <Ionicons name="map" size={48} color="#3B82F6" />
                 <Text className="mt-2 font-medium text-blue-700">Map View</Text>
                 <Text className="px-4 text-center text-sm text-blue-600">
@@ -163,7 +191,7 @@ const FavoriteDetailScreen = () => {
             </Text>
           </View>
 
-          {/* Additional Info */}
+          {/* Details */}
           <View className="pb-16">
             <Text className="mb-3 text-lg font-semibold text-gray-900">
               Details
