@@ -8,12 +8,12 @@ export default function ProtectedLayout() {
       <Stack.Screen
         name="index"
         options={{
+          headerShown: false,
           title: "All Favorites",
-          headerStyle: { backgroundColor: "#fff" },
+          headerStyle: { backgroundColor: "#f3f4f6" },
           headerTintColor: "#000",
           headerTitleStyle: { fontWeight: "bold" },
-          headerTitleAlign: "center",
-          headerShown: false,
+          headerTitleAlign: "left",
           contentStyle: {
             backgroundColor: "#f3f4f6",
           },
