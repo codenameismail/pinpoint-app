@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import {  FlatList } from "react-native";
+import { FlatList } from "react-native";
 
 import FavoriteCard from "./FavoriteCard";
 import ListHeader from "./ListHeader";
@@ -22,6 +22,7 @@ const FavoriteList = ({ favorites }) => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         rowGap: 16,
+        paddingBottom: 60,
       }}
       numColumns={2}
       columnWrapperStyle={{
