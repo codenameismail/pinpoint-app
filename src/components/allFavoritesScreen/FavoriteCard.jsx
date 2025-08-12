@@ -1,11 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { View, Text, Image } from "react-native";
+import { useRouter } from "expo-router";
+import { View, Text, Image, Pressable } from "react-native";
 
 const FavoriteCard = ({ favorite }) => {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push({
+      pathname: "/(protected)/favorite/[id]",
+      params: { id: favorite.id },
+    });
+  };
   return (
-    <View className="w-[48%] rounded-2xl bg-gray-100 p-2 pb-4 shadow-md shadow-gray-300">
+    <Pressable
+      onPress={handlePress}
+      className="w-[48%] rounded-2xl bg-gray-100 p-2 pb-4 shadow-md shadow-gray-300 active:scale-95 active:opacity-90"
+    >
       {/* Image Container */}
       <View className="relative mb-3 w-full">
         <Image
@@ -27,7 +39,7 @@ const FavoriteCard = ({ favorite }) => {
           {favorite.location.address.split(",").slice(0, 2).join(", ")}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
