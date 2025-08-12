@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {  FlatList } from "react-native";
 
 import FavoriteCard from "./FavoriteCard";
 import ListHeader from "./ListHeader";

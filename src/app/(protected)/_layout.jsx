@@ -14,6 +14,9 @@ export default function ProtectedLayout() {
           headerTitleStyle: { fontWeight: "bold" },
           headerTitleAlign: "center",
           headerShown: false,
+          contentStyle: {
+            backgroundColor: "#f3f4f6",
+          },
         }}
       />
     </Stack>
