@@ -5,9 +5,9 @@ const coffeeImg = require("../assets/images/coffee-bean.png");
 const restaurantImg = require("../assets/images/restaurant.png");
 const beachImg = require("../assets/images/sunny-beach.png");
 
-export const favourites = [
+export const favorites = [
   {
-    id: "1",
+    id: "f1",
     title: "The Coffee Bean",
     image: coffeeImg,
     location: {
@@ -19,7 +19,7 @@ export const favourites = [
     dateAdded: new Date("2025-08-12T09:00:00Z"),
   },
   {
-    id: "2",
+    id: "f2",
     title: "Central Park",
     image: parkImg,
     location: {
@@ -32,7 +32,7 @@ export const favourites = [
     dateAdded: new Date("2025-08-12T09:10:00Z"),
   },
   {
-    id: "3",
+    id: "f3",
     title: "The Art Museum",
     image: artImg,
     location: {
@@ -44,7 +44,7 @@ export const favourites = [
     dateAdded: new Date("2025-08-12T09:20:00Z"),
   },
   {
-    id: "4",
+    id: "f4",
     title: "The Bookstore",
     image: bookstoreImg,
     location: {
@@ -56,7 +56,7 @@ export const favourites = [
     dateAdded: new Date("2025-08-12T09:30:00Z"),
   },
   {
-    id: "5",
+    id: "f5",
     title: "Gourmet Restaurant",
     image: restaurantImg,
     location: {
@@ -69,7 +69,7 @@ export const favourites = [
     dateAdded: new Date("2025-08-12T09:40:00Z"),
   },
   {
-    id: "6",
+    id: "f6",
     title: "Sunny Beach",
     image: beachImg,
     location: {
