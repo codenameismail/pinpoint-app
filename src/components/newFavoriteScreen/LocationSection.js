@@ -7,8 +7,12 @@ import { useLocationPermission } from "../../hooks/useLocationPermission";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 
 const LocationSection = () => {
-  const { permissionDenied, requestPermission, requestPermissionWithAlert, checkPermissions } =
-    useLocationPermission();
+  const {
+    permissionDenied,
+    requestPermission,
+    requestPermissionWithAlert,
+    checkPermissions,
+  } = useLocationPermission();
   const { currentLocation, isLoading, error, getCurrentLocation } =
     useCurrentLocation();
 
