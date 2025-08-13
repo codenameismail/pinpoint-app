@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 
-import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,45 +8,26 @@ import { View, Text, ScrollView, Pressable, Modal, Image } from "react-native";
 import FormField from "../../../components/FormField";
 import ImagePicker from "../../../components/newFavoriteScreen/ImagePicker";
 
+import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
+import Header from "../../../components/newFavoriteScreen/Header";
+
 export default function AddFavoritePlaceScreen() {
-  const [inputTitle, setTitleInput] = useState("");
-  const [pickedImageUri, setPickedImageUri] = useState(null);
-  const [isPickerVisible, setPickerVisible] = useState(false);
-
-  const handleBack = useCallback(() => {
-    router.back();
-  }, []);
-
-  const handleImagePicked = (uri) => {
-    setPickedImageUri(uri);
-    setPickerVisible(false); // Close the picker after selection
-  };
-
-  const handleSave = () => {
-    // TODO: wire up save logic with the title and pickedImageUri
-    console.log("Title:", inputTitle);
-    console.log("Image URI:", pickedImageUri);
-  };
+  const {
+    inputTitle,
+    setTitleInput,
+    pickedImageUri,
+    isPickerVisible,
+    setPickerVisible,
+    handleBack,
+    handleImagePicked,
+    handleSave,
+  } = useAddFavoritePlace();
 
   return (
     <SafeAreaView className="flex-1" edges={["top"]}>
       <StatusBar style="dark" />
       {/* Header */}
-      <View className="relative h-[60px] items-center justify-center border-b border-gray-200 px-4">
-        <Pressable
-          onPress={handleBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          className="absolute left-4 top-1/2 z-10 -translate-y-1/2 transform flex-row items-center gap-x-1 active:scale-[0.98] active:opacity-80"
-        >
-          <Ionicons name="chevron-back" size={28} color="#111827" />
-          <Text className="text-lg font-medium text-gray-900">Back</Text>
-        </Pressable>
-
-        <Text className="text-center text-2xl font-semibold text-gray-900">
-          Add New Place
-        </Text>
-      </View>
+      <Header onBack={handleBack} title="Add New Place" />
 
       <ScrollView
         className="flex-1 bg-white px-4 pt-8"
