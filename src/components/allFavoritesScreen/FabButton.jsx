@@ -12,11 +12,11 @@ const FabButton = () => {
   return (
     <Pressable
       onPress={handlePress}
-      className="group absolute bottom-8 right-8 h-14 w-14 items-center justify-center rounded-full bg-black shadow-lg shadow-purple-200 active:scale-95 active:opacity-80"
+      className="group absolute bottom-14 right-10 h-16 w-16 items-center justify-center rounded-full bg-black shadow-lg shadow-purple-200 active:scale-95 active:opacity-80"
     >
       <Ionicons
         name="add"
-        size={28}
+        size={32}
         color="white"
         className="group-active:scale-95"
       />
