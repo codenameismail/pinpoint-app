@@ -6,12 +6,12 @@ import { View, ScrollView, Modal } from "react-native";
 
 import FormField from "../../../components/FormField";
 import ImagePicker from "../../../components/newFavoriteScreen/ImagePicker";
-import Header from "../../../components/newFavoriteScreen/Header";
 import LocationSection from "../../../components/newFavoriteScreen/LocationSection";
 import SaveButton from "../../../components/newFavoriteScreen/SaveButton";
 import { ImageSection } from "../../../components/newFavoriteScreen/ImageSection";
 
 import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
+import HeaderBar from "../../../components/HeaderBar";
 
 export default function AddFavoritePlaceScreen() {
   const {
@@ -20,7 +20,6 @@ export default function AddFavoritePlaceScreen() {
     pickedImageUri,
     isPickerVisible,
     setPickerVisible,
-    handleBack,
     handleImagePicked,
     handleSave,
   } = useAddFavoritePlace();
@@ -31,7 +30,7 @@ export default function AddFavoritePlaceScreen() {
     <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
       <StatusBar style="dark" />
       {/* Header */}
-      <Header onBack={handleBack} title="Add New Place" />
+      <HeaderBar title="Add New Place" />
 
       <ScrollView
         className="flex-1 bg-white px-4 pt-8"

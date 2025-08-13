@@ -2,11 +2,15 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
+import { useRouter } from "expo-router";
+
 import { cn } from "../../utils/cn";
+
 import { useLocationPermission } from "../../hooks/useLocationPermission";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 
 const LocationSection = () => {
+  const router = useRouter();
   const {
     permissionDenied,
     requestPermission,
@@ -30,7 +34,8 @@ const LocationSection = () => {
     if (permissionDenied) {
       requestPermissionWithAlert();
     } else {
-      // Logic to handle map interaction
+      // Navigate to the map screen
+      router.push("/map");
     }
   };
 
