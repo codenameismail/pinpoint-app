@@ -80,8 +80,15 @@ const LocationSection = () => {
       <Text className="mb-2 text-base font-medium text-gray-900">Location</Text>
 
       {/* Map or placeholder */}
-      <View className="min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50">
+      {/* Map or placeholder */}
+      <Pressable
+        className="group min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50 active:scale-[0.98] active:opacity-70"
+        accessibilityRole="button"
+        accessibilityLabel="Select location on map"
+        disabled={!!currentLocation} // Disable when location is already selected
+      >
         {currentLocation ? (
+          // MapView with current location
           <MapView
             style={{ flex: 1 }}
             region={{
@@ -103,11 +110,8 @@ const LocationSection = () => {
             />
           </MapView>
         ) : (
-          <Pressable
-            className="flex-1 items-center justify-center p-6 active:bg-purple-100"
-            accessibilityRole="button"
-            accessibilityLabel="Select location on map"
-          >
+          // Content when no location is set
+          <View className="flex-1 items-center justify-center p-6">
             <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-100">
               <Ionicons name="map-outline" size={32} color="#7e22ce" />
             </View>
@@ -123,17 +127,18 @@ const LocationSection = () => {
                 Select on Map
               </Text>
             </View>
-          </Pressable>
+          </View>
         )}
-      </View>
+      </Pressable>
 
-      {/* Error message */}
+      {/* Location Error message */}
       {locationError && (
         <View className="mt-2 rounded-lg bg-red-50 p-3">
           <Text className="text-sm text-red-700">{locationError}</Text>
         </View>
       )}
 
+      {/* Use Current Location Button */}
       <Pressable
         onPress={handleUseCurrentLocation}
         className={cn(
