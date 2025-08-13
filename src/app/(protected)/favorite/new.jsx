@@ -4,20 +4,30 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView, Pressable, Modal, Image } from "react-native";
 
 import FormField from "../../../components/FormField";
+import ImagePicker from "../../../components/newFavoriteScreen/ImagePicker";
 
 export default function AddFavoritePlaceScreen() {
   const [inputTitle, setTitleInput] = useState("");
+  const [pickedImageUri, setPickedImageUri] = useState(null);
+  const [isPickerVisible, setPickerVisible] = useState(false);
 
   const handleBack = useCallback(() => {
     router.back();
   }, []);
 
-  const noop = useCallback(() => {
-    // TODO: wire up image picker, location, and save
-  }, []);
+  const handleImagePicked = (uri) => {
+    setPickedImageUri(uri);
+    setPickerVisible(false); // Close the picker after selection
+  };
+
+  const handleSave = () => {
+    // TODO: wire up save logic with the title and pickedImageUri
+    console.log("Title:", inputTitle);
+    console.log("Image URI:", pickedImageUri);
+  };
 
   return (
     <SafeAreaView className="flex-1" edges={["top"]}>
@@ -66,33 +76,45 @@ export default function AddFavoritePlaceScreen() {
             Image
           </Text>
 
-          <Pressable
-            onPress={noop}
-            className="rounded-2xl border-2 border-dashed border-gray-300 p-4 active:scale-[0.99] active:border-purple-300"
-          >
-            <View className="items-center justify-center py-8">
-              <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-50">
-                <Ionicons name="image" size={28} color="#7e22ce" />
-              </View>
-              <Text className="mb-1 text-lg font-semibold text-gray-900">
-                Upload or Capture
-              </Text>
-              <Text className="mb-5 text-center text-sm text-gray-500">
-                PNG, JPG up to 10MB
-              </Text>
-
+          {/* Conditionally render the picked image or the placeholder */}
+          {pickedImageUri ? (
+            <View className="items-center">
+              <Image
+                source={{ uri: pickedImageUri }}
+                className="mb-4 h-56 w-full rounded-2xl"
+              />
               <Pressable
-                onPress={noop}
-                className="items-center justify-center rounded-full bg-gray-900 px-6 py-[10px] active:scale-[0.98] active:opacity-70"
-                accessibilityRole="button"
-                accessibilityLabel="Choose or capture an image"
+                onPress={() => setPickerVisible(true)}
+                className="rounded-full bg-gray-100 px-6 py-3"
               >
-                <Text className="text-base font-medium text-white">
-                  Add Image
+                <Text className="font-semibold text-gray-800">
+                  Change Image
                 </Text>
               </Pressable>
             </View>
-          </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => setPickerVisible(true)}
+              className="rounded-2xl border-2 border-dashed border-gray-300 p-4 active:scale-[0.99] active:border-purple-300"
+            >
+              <View className="items-center justify-center py-8">
+                <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-50">
+                  <Ionicons name="image" size={28} color="#7e22ce" />
+                </View>
+                <Text className="mb-1 text-lg font-semibold text-gray-900">
+                  Upload or Capture
+                </Text>
+                <Text className="mb-5 text-center text-sm text-gray-500">
+                  PNG, JPG up to 10MB
+                </Text>
+                <View className="items-center justify-center rounded-full bg-gray-900 px-6 py-[10px]">
+                  <Text className="text-base font-medium text-white">
+                    Add Image
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
+          )}
         </View>
 
         {/* Location */}
@@ -110,7 +132,7 @@ export default function AddFavoritePlaceScreen() {
           </View>
 
           <Pressable
-            onPress={noop}
+            onPress={handleImagePicked}
             className="mt-4 h-12 flex-row items-center justify-center rounded-full bg-gray-100 active:opacity-90"
             accessibilityRole="button"
             accessibilityLabel="Use current location"
@@ -124,7 +146,7 @@ export default function AddFavoritePlaceScreen() {
 
         {/* Save */}
         <Pressable
-          onPress={noop}
+          onPress={handleSave}
           className="mt-2 h-14 items-center justify-center rounded-full bg-purple-700 active:opacity-90"
           accessibilityRole="button"
           accessibilityLabel="Save place"
@@ -132,6 +154,14 @@ export default function AddFavoritePlaceScreen() {
           <Text className="text-base font-semibold text-white">Save Place</Text>
         </Pressable>
       </ScrollView>
+
+      {/* --- MODAL FOR THE IMAGE PICKER --- */}
+      <Modal visible={isPickerVisible} animationType="slide">
+        <ImagePicker
+          onImagePicked={handleImagePicked}
+          onCancel={() => setPickerVisible(false)}
+        />
+      </Modal>
     </SafeAreaView>
   );
 }
