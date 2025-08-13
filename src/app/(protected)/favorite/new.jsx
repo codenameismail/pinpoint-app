@@ -3,13 +3,14 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Pressable, Modal, Image } from "react-native";
+import { View, Text, ScrollView, Pressable, Modal } from "react-native";
 
 import FormField from "../../../components/FormField";
 import ImagePicker from "../../../components/newFavoriteScreen/ImagePicker";
+import Header from "../../../components/newFavoriteScreen/Header";
+import { ImageSection } from "../../../components/newFavoriteScreen/ImageSection";
 
 import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
-import Header from "../../../components/newFavoriteScreen/Header";
 
 export default function AddFavoritePlaceScreen() {
   const {
@@ -56,45 +57,10 @@ export default function AddFavoritePlaceScreen() {
             Image
           </Text>
 
-          {/* Conditionally render the picked image or the placeholder */}
-          {pickedImageUri ? (
-            <View className="items-center">
-              <Image
-                source={{ uri: pickedImageUri }}
-                className="mb-4 h-56 w-full rounded-2xl"
-              />
-              <Pressable
-                onPress={() => setPickerVisible(true)}
-                className="rounded-full bg-gray-100 px-6 py-3"
-              >
-                <Text className="font-semibold text-gray-800">
-                  Change Image
-                </Text>
-              </Pressable>
-            </View>
-          ) : (
-            <Pressable
-              onPress={() => setPickerVisible(true)}
-              className="rounded-2xl border-2 border-dashed border-gray-300 p-4 active:scale-[0.99] active:border-purple-300"
-            >
-              <View className="items-center justify-center py-8">
-                <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-50">
-                  <Ionicons name="image" size={28} color="#7e22ce" />
-                </View>
-                <Text className="mb-1 text-lg font-semibold text-gray-900">
-                  Upload or Capture
-                </Text>
-                <Text className="mb-5 text-center text-sm text-gray-500">
-                  PNG, JPG up to 10MB
-                </Text>
-                <View className="items-center justify-center rounded-full bg-gray-900 px-6 py-[10px]">
-                  <Text className="text-base font-medium text-white">
-                    Add Image
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          )}
+          <ImageSection
+            pickedImageUri={pickedImageUri}
+            onPickImage={() => setPickerVisible(true)}
+          />
         </View>
 
         {/* Location */}
