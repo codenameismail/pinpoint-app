@@ -7,7 +7,7 @@ import { useLocationPermission } from "../../hooks/useLocationPermission";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 
 const LocationSection = () => {
-  const { permissionDenied, requestPermission, checkPermissions } =
+  const { permissionDenied, requestPermission, requestPermissionWithAlert, checkPermissions } =
     useLocationPermission();
   const { currentLocation, isLoading, error, getCurrentLocation } =
     useCurrentLocation();
@@ -29,7 +29,7 @@ const LocationSection = () => {
             Location permission is required to use current location features.
           </Text>
           <Pressable
-            onPress={requestPermission}
+            onPress={requestPermission} // Direct to settings, no alert
             className="rounded-lg bg-orange-600 px-4 py-2 active:scale-[0.98] active:opacity-80"
             accessibilityRole="button"
           >
@@ -42,6 +42,11 @@ const LocationSection = () => {
 
       {/* Map Display */}
       <Pressable
+        onPress={() => {
+          if (permissionDenied) {
+            requestPermissionWithAlert(); // Show alert for map interaction
+          }
+        }}
         className="group min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50 active:scale-[0.98] active:opacity-70"
         accessibilityRole="button"
         disabled={!!currentLocation}

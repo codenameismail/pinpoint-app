@@ -26,6 +26,7 @@ export const useLocationPermission = () => {
     }
   };
 
+  // Direct request (for "Allow Location Access" button) - no alert, go straight to settings if needed
   const requestPermission = async () => {
     try {
       // Handle undetermined status
@@ -36,7 +37,36 @@ export const useLocationPermission = () => {
         return result;
       }
 
-      // Handle permanently denied
+      // If permanently denied, go straight to settings (no alert)
+      if (permissionStatus?.canAskAgain === false) {
+        Linking.openSettings();
+        return null;
+      }
+
+      // Request permission
+      const result = await requestForegroundPermissionsAsync();
+      setPermissionStatus(result);
+      setPermissionDenied(result.status !== PermissionStatus.GRANTED);
+      return result;
+    } catch (error) {
+      console.error("Error requesting permission:", error);
+      setPermissionDenied(true);
+      return null;
+    }
+  };
+
+  // Request with alert (for map interactions) - show alert first
+  const requestPermissionWithAlert = async () => {
+    try {
+      // Handle undetermined status
+      if (permissionStatus?.status === PermissionStatus.UNDETERMINED) {
+        const result = await requestForegroundPermissionsAsync();
+        setPermissionStatus(result);
+        setPermissionDenied(result.status !== PermissionStatus.GRANTED);
+        return result;
+      }
+
+      // Handle permanently denied with alert
       if (permissionStatus?.canAskAgain === false) {
         Alert.alert(
           "Permission Required",
@@ -88,7 +118,8 @@ export const useLocationPermission = () => {
   return {
     permissionStatus,
     permissionDenied,
-    requestPermission,
+    requestPermission, // Direct to settings (for dedicated button)
+    requestPermissionWithAlert, // Shows alert first (for map interactions)
     checkPermissions,
   };
 };
