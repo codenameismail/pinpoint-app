@@ -16,6 +16,24 @@ const LocationSection = () => {
   const { currentLocation, isLoading, error, getCurrentLocation } =
     useCurrentLocation();
 
+  // function for when the user clicks the "Use Current Location" button
+  const handleLocationPress = () => {
+    if (permissionDenied) {
+      requestPermissionWithAlert();
+    } else {
+      getCurrentLocation(checkPermissions);
+    }
+  };
+
+  // function for when the user clicks the preview map
+  const handleMapPress = () => {
+    if (permissionDenied) {
+      requestPermissionWithAlert();
+    } else {
+      // Logic to handle map interaction
+    }
+  };
+
   return (
     <View className="mb-8">
       <Text className="mb-2 text-base font-medium text-gray-900">Location</Text>
@@ -46,14 +64,10 @@ const LocationSection = () => {
 
       {/* Map Display */}
       <Pressable
-        onPress={() => {
-          if (permissionDenied) {
-            requestPermissionWithAlert(); // Show alert for map interaction
-          }
-        }}
+        onPress={handleMapPress}
         className="group min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50 active:scale-[0.98] active:opacity-70"
         accessibilityRole="button"
-        disabled={!!currentLocation}
+        disabled={!!currentLocation} // Disable if location is already set
       >
         {currentLocation ? (
           <MapView
@@ -102,7 +116,7 @@ const LocationSection = () => {
 
       {/* Current Location Button */}
       <Pressable
-        onPress={() => getCurrentLocation(checkPermissions)}
+        onPress={handleLocationPress}
         className={cn(
           "mt-4 h-12 flex-row items-center justify-center rounded-full bg-gray-100 active:scale-[0.98] active:opacity-70",
           (isLoading || permissionDenied) && "opacity-50",
