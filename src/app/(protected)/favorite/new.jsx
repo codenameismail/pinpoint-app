@@ -1,13 +1,14 @@
 import React from "react";
 
 import { StatusBar } from "expo-status-bar";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Pressable, Modal } from "react-native";
+import { View, ScrollView, Modal } from "react-native";
 
 import FormField from "../../../components/FormField";
 import ImagePicker from "../../../components/newFavoriteScreen/ImagePicker";
 import Header from "../../../components/newFavoriteScreen/Header";
+import LocationSection from "../../../components/newFavoriteScreen/LocationSection";
+import SaveButton from "../../../components/newFavoriteScreen/SaveButton";
 import { ImageSection } from "../../../components/newFavoriteScreen/ImageSection";
 
 import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
@@ -38,7 +39,7 @@ export default function AddFavoritePlaceScreen() {
         keyboardShouldPersistTaps="never"
         showsVerticalScrollIndicator={false}
       >
-        {/* Title */}
+        {/* Title Input */}
         <View className="mb-6">
           <FormField
             label={"Title"}
@@ -52,53 +53,21 @@ export default function AddFavoritePlaceScreen() {
         </View>
 
         {/* Image */}
-        <View className="mb-8">
-          <Text className="mb-2 text-base font-medium text-gray-900">
-            Image
-          </Text>
-
-          <ImageSection
-            pickedImageUri={pickedImageUri}
-            onPickImage={() => setPickerVisible(true)}
-          />
-        </View>
+        <ImageSection
+          pickedImageUri={pickedImageUri}
+          onPickImage={() => setPickerVisible(true)}
+        />
 
         {/* Location */}
-        <View className="mb-6">
-          <Text className="mb-2 text-base font-medium text-gray-900">
-            Location
-          </Text>
+        <LocationSection
+          onUseCurrentLocation={() => {
+            // Logic to use current location
+            console.log("Using current location");
+          }}
+        />
 
-          {/* Map placeholder */}
-          <View className="h-48 w-full overflow-hidden rounded-2xl bg-purple-50">
-            <View className="flex-1 items-center justify-center">
-              <Ionicons name="map" size={46} color="#7e22ce" />
-              <Text className="mt-2 text-sm text-purple-700">Map Preview</Text>
-            </View>
-          </View>
-
-          <Pressable
-            onPress={handleImagePicked}
-            className="mt-4 h-12 flex-row items-center justify-center rounded-full bg-gray-100 active:opacity-90"
-            accessibilityRole="button"
-            accessibilityLabel="Use current location"
-          >
-            <Ionicons name="locate" size={18} color="#111827" />
-            <Text className="ml-2 font-medium text-gray-900">
-              Use Current Location
-            </Text>
-          </Pressable>
-        </View>
-
-        {/* Save */}
-        <Pressable
-          onPress={handleSave}
-          className="mt-2 h-14 items-center justify-center rounded-full bg-purple-700 active:opacity-90"
-          accessibilityRole="button"
-          accessibilityLabel="Save place"
-        >
-          <Text className="text-base font-semibold text-white">Save Place</Text>
-        </Pressable>
+        {/* Save Button */}
+        <SaveButton onPress={handleSave} />
       </ScrollView>
 
       {/* --- MODAL FOR THE IMAGE PICKER --- */}
