@@ -26,6 +26,12 @@ export default function ProtectedLayout() {
         }}
       />
       <Stack.Screen name="favorite/new" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="map"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
