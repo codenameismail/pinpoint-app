@@ -1,11 +1,16 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, ScrollView, Pressable } from "react-native";
+
+import FormField from "../../../components/FormField";
 
 export default function AddFavoritePlaceScreen() {
+  const [inputTitle, setTitleInput] = useState("");
+
   const handleBack = useCallback(() => {
     router.back();
   }, []);
@@ -35,21 +40,23 @@ export default function AddFavoritePlaceScreen() {
       </View>
 
       <ScrollView
-        className="flex-1 bg-white"
-        contentContainerStyle={{ padding: 16, paddingBottom: 32 }}
-        keyboardShouldPersistTaps="handled"
+        className="flex-1 bg-white px-4 pt-8"
+        contentContainerStyle={{
+          paddingBottom: 40,
+        }}
+        keyboardShouldPersistTaps="never"
         showsVerticalScrollIndicator={false}
       >
         {/* Title */}
         <View className="mb-6">
-          <Text className="mb-2 text-base font-medium text-gray-900">
-            Title
-          </Text>
-          <TextInput
-            placeholder="e.g. My Favorite Coffee Shop"
-            placeholderTextColor="#9CA3AF"
-            className="h-14 rounded-2xl border border-gray-200 bg-gray-50 px-4 text-gray-900"
-            returnKeyType="done"
+          <FormField
+            label={"Title"}
+            onChangeText={setTitleInput}
+            value={inputTitle}
+            placeholder={"e.g. My Favorite Coffee Shop"}
+            inputProps={{
+              returnKeyType: "done",
+            }}
           />
         </View>
 
@@ -59,7 +66,10 @@ export default function AddFavoritePlaceScreen() {
             Image
           </Text>
 
-          <View className="rounded-2xl border-2 border-dashed border-gray-300 p-4">
+          <Pressable
+            onPress={noop}
+            className="rounded-2xl border-2 border-dashed border-gray-300 p-4 active:scale-[0.99] active:border-purple-300"
+          >
             <View className="items-center justify-center py-8">
               <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-50">
                 <Ionicons name="image" size={28} color="#7e22ce" />
@@ -73,7 +83,7 @@ export default function AddFavoritePlaceScreen() {
 
               <Pressable
                 onPress={noop}
-                className="h-12 items-center justify-center rounded-full bg-gray-900 px-6 active:opacity-90"
+                className="items-center justify-center rounded-full bg-gray-900 px-6 py-[10px] active:scale-[0.98] active:opacity-70"
                 accessibilityRole="button"
                 accessibilityLabel="Choose or capture an image"
               >
@@ -82,7 +92,7 @@ export default function AddFavoritePlaceScreen() {
                 </Text>
               </Pressable>
             </View>
-          </View>
+          </Pressable>
         </View>
 
         {/* Location */}
