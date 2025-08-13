@@ -25,6 +25,8 @@ export default function AddFavoritePlaceScreen() {
     handleSave,
   } = useAddFavoritePlace();
 
+  const isValidTitle = inputTitle.trim().length > 0;
+
   return (
     <SafeAreaView className="flex-1" edges={["top"]}>
       <StatusBar style="dark" />
@@ -67,7 +69,7 @@ export default function AddFavoritePlaceScreen() {
         />
 
         {/* Save Button */}
-        <SaveButton onPress={handleSave} />
+        <SaveButton onPress={handleSave} disabled={!isValidTitle} />
       </ScrollView>
 
       {/* --- MODAL FOR THE IMAGE PICKER --- */}
