@@ -52,6 +52,12 @@
           "savePhotosPermission": "Pin Point needs permission to save photos to your device",
           "isAccessMediaLocationEnabled": true
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Pin Point uses your location to create and manage location-based pins and reminders"
+        }
       ]
     ],
     "experiments": {
