@@ -7,6 +7,7 @@ import {
   getCurrentPositionAsync,
   LocationAccuracy,
 } from "expo-location";
+import MapView, { Marker } from "react-native-maps";
 
 import { cn } from "../../utils/cn";
 
@@ -78,13 +79,48 @@ const LocationSection = () => {
     <View className="mb-8">
       <Text className="mb-2 text-base font-medium text-gray-900">Location</Text>
 
-      {/* Map placeholder */}
+      {/* Map or placeholder */}
       <View className="h-52 w-full overflow-hidden rounded-2xl bg-purple-50">
-        <View className="flex-1 items-center justify-center">
-          <Ionicons name="map" size={46} color="#7e22ce" />
-          <Text className="mt-2 text-sm text-purple-700">Map Preview</Text>
-        </View>
+        {currentLocation ? (
+          <MapView
+            style={{ flex: 1 }}
+            region={{
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+            showsUserLocation={true}
+            showsMyLocationButton={false}
+          >
+            <Marker
+              coordinate={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+              }}
+              title="Your Location"
+              description="Current location"
+            />
+          </MapView>
+        ) : (
+          <View className="flex-1 items-center justify-center px-6">
+            <Ionicons name="location-outline" size={48} color="#9ca3af" />
+            <Text className="mt-3 text-center text-base font-medium text-gray-700">
+              No Location Selected
+            </Text>
+            <Text className="mt-1 text-center text-sm text-gray-500">
+              Tap &ldquo;Use Current Location&ldquo; to pin your position on the map
+            </Text>
+          </View>
+        )}
       </View>
+
+      {/* Error message */}
+      {locationError && (
+        <View className="mt-2 rounded-lg bg-red-50 p-3">
+          <Text className="text-sm text-red-700">{locationError}</Text>
+        </View>
+      )}
 
       <Pressable
         onPress={handleUseCurrentLocation}
