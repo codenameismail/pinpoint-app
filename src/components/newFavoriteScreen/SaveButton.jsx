@@ -7,11 +7,11 @@ const SaveButton = ({ onPress, disabled = false }) => {
   return (
     <Pressable
       onPress={onPress}
-      className="mt-2 h-14 items-center justify-center rounded-full bg-purple-700 active:opacity-90"
+      className="mt-2 h-14 items-center justify-center rounded-full bg-purple-700 active:scale-[0.98] active:bg-purple-400"
       accessibilityRole="button"
       accessibilityLabel="Save place"
       disabled={disabled}
-      style={{ opacity: disabled ? 0.6 : 1 }}
+      style={{ opacity: disabled ? 0.5 : 1 }}
     >
       <Text className="text-base font-semibold text-white">Save Place</Text>
     </Pressable>
