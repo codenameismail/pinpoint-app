@@ -1,116 +1,69 @@
-import React, { useState, useEffect } from "react";
-
-import { View, Text, Pressable, Alert } from "react-native";
+import React from "react";
+import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  useForegroundPermissions,
-  getCurrentPositionAsync,
-  LocationAccuracy,
-} from "expo-location";
 import MapView, { Marker } from "react-native-maps";
-
 import { cn } from "../../utils/cn";
-
-/* 
-{"coords": {"accuracy": 35, "altitude": 1349.5909118652344, "altitudeAccuracy": 9.722363471984863, "heading": -1, "latitude": -26.689489541648225, "longitude": 27.09211097965955, "speed": -1}, "timestamp": 1755098756787.551}
-*/
+import { useLocationPermission } from "../../hooks/useLocationPermission";
+import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 
 const LocationSection = () => {
-  const [locationPermissionInformation, requestPermission] =
-    useForegroundPermissions();
-
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [locationError, setLocationError] = useState(null);
-
-  useEffect(() => {
-    // Request permissions when the component mounts
-    const requestLocationPermission = async () => {
-      const { status } = await requestPermission();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission needed",
-          "Location access is required to use this feature.",
-        );
-      }
-    };
-    requestLocationPermission();
-  }, []);
-
-  const handleUseCurrentLocation = async () => {
-    // Clear any previous errors
-    setLocationError(null);
-    setIsLoadingLocation(true);
-
-    try {
-      const location = await getCurrentPositionAsync({
-        accuracy: LocationAccuracy.High,
-        mayShowUserSettingsDialog: true,
-        timeInterval: 3000,
-      });
-
-      setCurrentLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-
-      // Optional: Show success feedback
-      console.log("Location obtained:", location.coords);
-    } catch (error) {
-      console.error("Error getting location:", error);
-
-      // Specific error messages based on error type
-      let errorMessage = "Could not fetch location. Please try again.";
-
-      if (error.code === "E_LOCATION_SETTINGS_UNSATISFIED") {
-        errorMessage =
-          "Please enable location services in your device settings.";
-      } else if (error.code === "E_LOCATION_TIMEOUT") {
-        errorMessage = "Location request timed out. Please try again.";
-      }
-
-      setLocationError(errorMessage);
-    } finally {
-      setIsLoadingLocation(false);
-    }
-  };
+  const { permissionDenied, requestPermission, checkPermissions } =
+    useLocationPermission();
+  const { currentLocation, isLoading, error, getCurrentLocation } =
+    useCurrentLocation();
 
   return (
     <View className="mb-8">
       <Text className="mb-2 text-base font-medium text-gray-900">Location</Text>
 
-      {/* Map or placeholder */}
-      {/* Map or placeholder */}
+      {/* Permission Denied UI */}
+      {permissionDenied && (
+        <View className="my-2 rounded-lg border border-orange-200 bg-orange-50 p-4">
+          <View className="mb-2 flex-row items-center">
+            <Ionicons name="warning" size={20} color="#ea580c" />
+            <Text className="ml-2 text-sm font-medium text-orange-800">
+              Location Access Needed
+            </Text>
+          </View>
+          <Text className="mb-3 text-sm text-orange-700">
+            Location permission is required to use current location features.
+          </Text>
+          <Pressable
+            onPress={requestPermission}
+            className="rounded-lg bg-orange-600 px-4 py-2 active:scale-[0.98] active:opacity-80"
+            accessibilityRole="button"
+          >
+            <Text className="text-center text-sm font-medium text-white">
+              Allow Location Access
+            </Text>
+          </Pressable>
+        </View>
+      )}
+
+      {/* Map Display */}
       <Pressable
         className="group min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50 active:scale-[0.98] active:opacity-70"
         accessibilityRole="button"
-        accessibilityLabel="Select location on map"
-        disabled={!!currentLocation} // Disable when location is already selected
+        disabled={!!currentLocation}
       >
         {currentLocation ? (
-          // MapView with current location
           <MapView
             style={{ flex: 1 }}
             region={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
+              ...currentLocation,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             }}
-            showsUserLocation={true}
+            showsUserLocation
             showsMyLocationButton={false}
           >
             <Marker
-              coordinate={{
-                latitude: currentLocation.latitude,
-                longitude: currentLocation.longitude,
-              }}
+              coordinate={currentLocation}
               title="Your Location"
               description="Current location"
             />
           </MapView>
         ) : (
-          // Content when no location is set
           <View className="flex-1 items-center justify-center p-6">
             <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-100">
               <Ionicons name="map-outline" size={32} color="#7e22ce" />
@@ -131,34 +84,30 @@ const LocationSection = () => {
         )}
       </Pressable>
 
-      {/* Location Error message */}
-      {locationError && (
+      {/* Error Display */}
+      {error && (
         <View className="mt-2 rounded-lg bg-red-50 p-3">
-          <Text className="text-sm text-red-700">{locationError}</Text>
+          <Text className="text-sm text-red-700">{error}</Text>
         </View>
       )}
 
-      {/* Use Current Location Button */}
+      {/* Current Location Button */}
       <Pressable
-        onPress={handleUseCurrentLocation}
+        onPress={() => getCurrentLocation(checkPermissions)}
         className={cn(
           "mt-4 h-12 flex-row items-center justify-center rounded-full bg-gray-100 active:scale-[0.98] active:opacity-70",
-          isLoadingLocation && "opacity-50",
+          (isLoading || permissionDenied) && "opacity-50",
         )}
         accessibilityRole="button"
-        accessibilityLabel="Use current location"
-        disabled={isLoadingLocation}
         hitSlop={10}
       >
         <Ionicons name="locate" size={18} color="#111827" />
         <Text className="ml-2 font-medium text-gray-900">
-          {isLoadingLocation ? "Fetching Location..." : "Use Current Location"}
+          {isLoading ? "Fetching Location..." : "Use Current Location"}
         </Text>
       </Pressable>
     </View>
   );
 };
-
-LocationSection.propTypes = {};
 
 export default LocationSection;
