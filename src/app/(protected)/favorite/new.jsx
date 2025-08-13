@@ -28,7 +28,7 @@ export default function AddFavoritePlaceScreen() {
   const isValidTitle = inputTitle.trim().length > 0;
 
   return (
-    <SafeAreaView className="flex-1" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
       <StatusBar style="dark" />
       {/* Header */}
       <Header onBack={handleBack} title="Add New Place" />
