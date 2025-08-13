@@ -16,7 +16,7 @@
     "ios": {
       "supportsTablet": true
     },
-     "android": {
+    "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -35,6 +35,22 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Pin Point needs access to your camera to capture photos and scan locations",
+          "microphonePermission": "Pin Point needs microphone access to record audio with videos",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Pin Point needs access to your photo library to save and manage your location pins",
+          "savePhotosPermission": "Pin Point needs permission to save photos to your device",
+          "isAccessMediaLocationEnabled": true
         }
       ]
     ],
