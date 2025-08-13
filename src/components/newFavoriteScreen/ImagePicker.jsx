@@ -154,7 +154,7 @@ const ImagePicker = ({ onImagePicked, onCancel }) => {
                 <Pressable onPress={() => onImagePicked(item.uri)}>
                   <Image
                     source={{ uri: item.uri }}
-                    className="mx-1 h-24 w-24 rounded-lg border-2 border-purple-500"
+                    className="mx-1 h-24 w-24 rounded-lg"
                     style={{
                       height: 96,
                       width: 96,
