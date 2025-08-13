@@ -80,7 +80,7 @@ const LocationSection = () => {
       <Text className="mb-2 text-base font-medium text-gray-900">Location</Text>
 
       {/* Map or placeholder */}
-      <View className="h-52 w-full overflow-hidden rounded-2xl bg-purple-50">
+      <View className="min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50">
         {currentLocation ? (
           <MapView
             style={{ flex: 1 }}
@@ -103,15 +103,27 @@ const LocationSection = () => {
             />
           </MapView>
         ) : (
-          <View className="flex-1 items-center justify-center px-6">
-            <Ionicons name="location-outline" size={48} color="#9ca3af" />
-            <Text className="mt-3 text-center text-base font-medium text-gray-700">
-              No Location Selected
+          <Pressable
+            className="flex-1 items-center justify-center p-6 active:bg-purple-100"
+            accessibilityRole="button"
+            accessibilityLabel="Select location on map"
+          >
+            <View className="mb-3 h-16 w-16 items-center justify-center rounded-full bg-purple-100">
+              <Ionicons name="map-outline" size={32} color="#7e22ce" />
+            </View>
+            <Text className="mb-2 text-center text-base font-medium text-gray-700">
+              Choose Location
             </Text>
-            <Text className="mt-1 text-center text-sm text-gray-500">
-              Tap &ldquo;Use Current Location&ldquo; to pin your position on the map
+            <Text className="text-center text-sm text-gray-500">
+              Tap to select your favorite place on the map
             </Text>
-          </View>
+            <View className="mt-4 flex-row items-center rounded-full bg-purple-700 px-4 py-2">
+              <Ionicons name="location" size={16} color="white" />
+              <Text className="ml-1 text-sm font-medium text-white">
+                Select on Map
+              </Text>
+            </View>
+          </Pressable>
         )}
       </View>
 
