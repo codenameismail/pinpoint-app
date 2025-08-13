@@ -28,7 +28,10 @@ const ImagePlaceholder = ({ onPress }) => (
 
 const SelectedImage = ({ uri, onChangeImage }) => (
   <View className="items-center">
-    <Image source={{ uri }} className="mb-4 h-56 w-full rounded-2xl" />
+    <Image
+      source={{ uri }}
+      className="mb-4 h-64 w-full rounded-2xl"
+    />
     <Pressable
       onPress={onChangeImage}
       className="rounded-full bg-gray-100 px-6 py-3"
