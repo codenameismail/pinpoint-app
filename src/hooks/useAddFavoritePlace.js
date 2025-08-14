@@ -49,9 +49,7 @@ export const useAddFavoritePlace = () => {
     return true;
   };
 
-  const handleSave = () => {
-    // TODO: wire up save logic with the title and pickedImageUri
-
+  const handleSave = useCallback(() => {
     // validate
     if (!validateInputs()) {
       return;
@@ -69,7 +67,7 @@ export const useAddFavoritePlace = () => {
     };
 
     console.log("New Favorite Place:", newPlace);
-  };
+  }, [inputTitle, pickedImageUri, location]);
 
   return {
     inputTitle,

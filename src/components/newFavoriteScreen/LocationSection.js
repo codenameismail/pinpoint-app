@@ -83,10 +83,10 @@ const LocationSection = ({ onUseCurrentLocation }) => {
 
   // function to handle resetting the selected location
   const handleResetLocation = () => {
-    setSelectedLocation(null);
-    setDisplayLocation(null);
-    setEstimatedLocation(null);
-    onUseCurrentLocation(null);
+    setSelectedLocation(() => null);
+    setDisplayLocation(() => null);
+    setEstimatedLocation(() => null);
+    onUseCurrentLocation(() => null);
   };
 
   // function for when the user clicks the preview map
@@ -99,7 +99,7 @@ const LocationSection = ({ onUseCurrentLocation }) => {
     const locationToSend =
       selectedLocation || currentLocation || estimatedLocation;
     if (locationToSend) {
-      router.push({
+      router.navigate({
         pathname: "/(protected)/map",
         params: {
           latitude: locationToSend.latitude.toString(),
@@ -160,7 +160,7 @@ const LocationSection = ({ onUseCurrentLocation }) => {
         onPress={handleMapPress}
         className="group min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50 active:scale-[0.98] active:opacity-70"
         accessibilityRole="button"
-        disabled={!!currentLocation || !!selectedLocation} // Disable if location is already set
+        disabled={!!displayLocation} // Disable if location is already set
         hitSlop={10}
       >
         {displayLocation ? (
