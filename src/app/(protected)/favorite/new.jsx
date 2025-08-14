@@ -8,12 +8,13 @@ import FormField from "../../../components/FormField";
 import ImagePicker from "../../../components/newFavoriteScreen/ImagePicker";
 import LocationSection from "../../../components/newFavoriteScreen/LocationSection";
 import SaveButton from "../../../components/newFavoriteScreen/SaveButton";
+import HeaderBar from "../../../components/HeaderBar";
 import { ImageSection } from "../../../components/newFavoriteScreen/ImageSection";
 
 import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
-import HeaderBar from "../../../components/HeaderBar";
 
 export default function AddFavoritePlaceScreen() {
+  // Custom hook to manage the state and logic for adding a favorite place
   const {
     inputTitle,
     setTitleInput,
@@ -24,6 +25,7 @@ export default function AddFavoritePlaceScreen() {
     handleSave,
   } = useAddFavoritePlace();
 
+  // Validate title input
   const isValidTitle = inputTitle.trim().length > 0;
 
   return (
