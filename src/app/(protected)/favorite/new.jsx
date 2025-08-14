@@ -19,14 +19,12 @@ export default function AddFavoritePlaceScreen() {
     inputTitle,
     setTitleInput,
     pickedImageUri,
+    handleImagePicked,
+    handleUseCurrentLocation,
     isPickerVisible,
     setPickerVisible,
-    handleImagePicked,
     handleSave,
   } = useAddFavoritePlace();
-
-  // Validate title input
-  const isValidTitle = inputTitle.trim().length > 0;
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
@@ -62,15 +60,10 @@ export default function AddFavoritePlaceScreen() {
         />
 
         {/* Location */}
-        <LocationSection
-          onUseCurrentLocation={() => {
-            // Logic to use current location
-            console.log("Using current location");
-          }}
-        />
+        <LocationSection onUseCurrentLocation={handleUseCurrentLocation} />
 
         {/* Save Button */}
-        <SaveButton onPress={handleSave} disabled={!isValidTitle} />
+        <SaveButton onPress={handleSave} />
       </ScrollView>
 
       {/* --- MODAL FOR THE IMAGE PICKER --- */}

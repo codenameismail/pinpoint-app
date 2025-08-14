@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+
 import { View, Text, Pressable } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -10,7 +12,7 @@ import { useLocationPermission } from "../../hooks/useLocationPermission";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 import InputHeader from "./InputHeader";
 
-const LocationSection = () => {
+const LocationSection = ({ onUseCurrentLocation }) => {
   const { latitude, longitude } = useLocalSearchParams(); // Get individual params
   const router = useRouter();
 
@@ -63,6 +65,13 @@ const LocationSection = () => {
     }
   }, [currentLocation, selectedLocation]);
 
+  // Pass location data up whenever it changes
+  useEffect(() => {
+    if (displayLocation) {
+      onUseCurrentLocation(displayLocation);
+    }
+  }, [displayLocation, onUseCurrentLocation]);
+
   // function for when the user clicks the "Use Current Location" button
   const handleLocationPress = () => {
     if (permissionDenied) {
@@ -76,6 +85,8 @@ const LocationSection = () => {
   const handleResetLocation = () => {
     setSelectedLocation(null);
     setDisplayLocation(null);
+    setEstimatedLocation(null);
+    onUseCurrentLocation(null);
   };
 
   // function for when the user clicks the preview map
@@ -245,6 +256,10 @@ const LocationSection = () => {
       )}
     </View>
   );
+};
+
+LocationSection.propTypes = {
+  onUseCurrentLocation: PropTypes.func.isRequired,
 };
 
 export default LocationSection;
