@@ -30,6 +30,7 @@ export default function ProtectedLayout() {
         name="map"
         options={{
           headerShown: false,
+          presentation: "modal",
         }}
       />
     </Stack>
