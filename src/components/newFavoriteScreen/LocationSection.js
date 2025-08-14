@@ -16,6 +16,7 @@ const LocationSection = () => {
 
   const [displayLocation, setDisplayLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [estimatedLocation, setEstimatedLocation] = useState(null);
 
   const {
     permissionDenied,
@@ -23,8 +24,25 @@ const LocationSection = () => {
     requestPermissionWithAlert,
     checkPermissions,
   } = useLocationPermission();
-  const { currentLocation, isLoading, error, getCurrentLocation } =
-    useCurrentLocation();
+  const {
+    currentLocation,
+    isLoading,
+    error,
+    getAccurateLocation,
+    getEstimatedLocation,
+  } = useCurrentLocation();
+
+  // Get a quick location estimate on mount
+  useEffect(() => {
+    const fetchEstimatedLocation = async () => {
+      const estimate = await getEstimatedLocation(checkPermissions);
+      if (estimate) {
+        setEstimatedLocation(estimate);
+      }
+    };
+
+    fetchEstimatedLocation();
+  }, []);
 
   // Parse the selected location from params
   useEffect(() => {
@@ -50,7 +68,7 @@ const LocationSection = () => {
     if (permissionDenied) {
       requestPermissionWithAlert();
     } else {
-      getCurrentLocation(checkPermissions);
+      getAccurateLocation(checkPermissions);
     }
   };
 
@@ -64,10 +82,23 @@ const LocationSection = () => {
   const handleMapPress = () => {
     if (permissionDenied) {
       requestPermissionWithAlert();
-    } else {
-      // Navigate to the map screen
-      router.push("/map");
+      return;
     }
+    // Navigate to the map screen with the current location
+    const locationToSend =
+      selectedLocation || currentLocation || estimatedLocation;
+    if (locationToSend) {
+      router.push({
+        pathname: "/(protected)/map",
+        params: {
+          latitude: locationToSend.latitude.toString(),
+          longitude: locationToSend.longitude.toString(),
+        },
+      });
+      return;
+    }
+    // If no current location, just navigate to the map
+    router.push("/(protected)/map");
   };
 
   return (

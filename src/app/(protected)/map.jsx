@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 import MapView, { Marker } from "react-native-maps";
+import { StatusBar } from "expo-status-bar";
+import { useRouter, useLocalSearchParams } from "expo-router";
+
 import HeaderBar from "../../components/HeaderBar";
-import { useRouter } from "expo-router";
 
 const MapScreen = () => {
+  const { latitude, longitude } = useLocalSearchParams();
+  const displayLocation = {
+    latitude: latitude ? parseFloat(latitude) : 37.78825,
+    longitude: longitude ? parseFloat(longitude) : -122.4324,
+  };
   const router = useRouter();
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(
+    displayLocation || null,
+  );
 
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
@@ -43,19 +51,19 @@ const MapScreen = () => {
             style={{ flex: 1, width: "100%" }}
             initialRegion={{
               // have a default region
-              latitude: 37.78825,
-              longitude: -122.4324,
+              ...displayLocation,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
-            showsUserLocation
-            showsMyLocationButton={true}
+            showsUserLocation={true}
           >
-            {selectedLocation && (
+            {(selectedLocation || displayLocation) && (
               <Marker
                 //   style the marker
                 pinColor="purple"
-                coordinate={selectedLocation}
+                coordinate={selectedLocation || displayLocation}
+                title="Selected Location"
+                description="Tap 'Confirm' below to use this spot"
               />
             )}
           </MapView>
@@ -71,7 +79,7 @@ const MapScreen = () => {
 
       {/* Bottom Action Bar */}
       <View className="border-t border-gray-100 bg-white px-4 py-4">
-        {selectedLocation && (
+        {(selectedLocation || displayLocation) && (
           <Pressable
             onPress={handleConfirm}
             className="h-12 items-center justify-center rounded-full bg-purple-600 active:scale-[0.98] active:opacity-70"
