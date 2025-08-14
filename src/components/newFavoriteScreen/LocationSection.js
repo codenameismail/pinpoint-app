@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 import { cn } from "../../utils/cn";
 
@@ -10,7 +10,12 @@ import { useLocationPermission } from "../../hooks/useLocationPermission";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 
 const LocationSection = () => {
+  const { latitude, longitude } = useLocalSearchParams(); // Get individual params
   const router = useRouter();
+
+  const [displayLocation, setDisplayLocation] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
   const {
     permissionDenied,
     requestPermission,
@@ -19,6 +24,25 @@ const LocationSection = () => {
   } = useLocationPermission();
   const { currentLocation, isLoading, error, getCurrentLocation } =
     useCurrentLocation();
+
+  // Parse the selected location from params
+  useEffect(() => {
+    if (latitude && longitude) {
+      const parsedLocation = {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      };
+      setSelectedLocation(parsedLocation);
+      setDisplayLocation(parsedLocation);
+    }
+  }, [latitude, longitude]);
+
+  // Update display location when current location changes (if no manual selection)
+  useEffect(() => {
+    if (!selectedLocation && currentLocation) {
+      setDisplayLocation(currentLocation);
+    }
+  }, [currentLocation, selectedLocation]);
 
   // function for when the user clicks the "Use Current Location" button
   const handleLocationPress = () => {
@@ -56,7 +80,7 @@ const LocationSection = () => {
             Location permission is required to use current location features.
           </Text>
           <Pressable
-            onPress={requestPermission} // Direct to settings, no alert
+            onPress={requestPermission}
             className="rounded-lg bg-orange-600 px-4 py-2 active:scale-[0.98] active:opacity-80"
             accessibilityRole="button"
           >
@@ -72,23 +96,29 @@ const LocationSection = () => {
         onPress={handleMapPress}
         className="group min-h-56 w-full overflow-hidden rounded-2xl bg-purple-50 active:scale-[0.98] active:opacity-70"
         accessibilityRole="button"
-        disabled={!!currentLocation} // Disable if location is already set
+        disabled={!!currentLocation || !!selectedLocation} // Disable if location is already set
+        hitSlop={10}
       >
-        {currentLocation ? (
+        {displayLocation ? (
           <MapView
             style={{ flex: 1 }}
             region={{
-              ...currentLocation,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+              ...displayLocation,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
             }}
-            showsUserLocation
+            showsUserLocation={!selectedLocation} // Only show user location if not manually selected
             showsMyLocationButton={false}
+            // scrollEnabled={false}
+            // zoomEnabled={false}
           >
             <Marker
-              coordinate={currentLocation}
-              title="Your Location"
-              description="Current location"
+              coordinate={displayLocation}
+              title={selectedLocation ? "Selected Location" : "Your Location"}
+              description={
+                selectedLocation ? "Tap to change" : "Current location"
+              }
+              pinColor={selectedLocation ? "purple" : "red"}
             />
           </MapView>
         ) : (
@@ -119,21 +149,49 @@ const LocationSection = () => {
         </View>
       )}
 
-      {/* Current Location Button */}
-      <Pressable
-        onPress={handleLocationPress}
-        className={cn(
-          "mt-4 h-12 flex-row items-center justify-center rounded-full bg-gray-100 active:scale-[0.98] active:opacity-70",
-          (isLoading || permissionDenied) && "opacity-50",
-        )}
-        accessibilityRole="button"
-        hitSlop={10}
-      >
-        <Ionicons name="locate" size={18} color="#111827" />
-        <Text className="ml-2 font-medium text-gray-900">
-          {isLoading ? "Fetching Location..." : "Use Current Location"}
-        </Text>
-      </Pressable>
+      {/* Show selected location info and option to change */}
+      {selectedLocation && (
+        <View className="mt-4 rounded-lg bg-green-50 p-3">
+          <View className="flex-row items-center justify-between">
+            <View className="flex-1">
+              <View className="flex-row items-center">
+                <Ionicons name="checkmark-circle" size={20} color="#16a34a" />
+                <Text className="ml-2 text-sm font-medium text-green-800">
+                  Location Selected
+                </Text>
+              </View>
+              <Text className="mt-1 text-xs text-green-700">
+                Lat: {selectedLocation.latitude.toFixed(6)}, Lng:{" "}
+                {selectedLocation.longitude.toFixed(6)}
+              </Text>
+            </View>
+            <Pressable
+              onPress={handleMapPress}
+              className="ml-2 rounded-lg bg-green-600 px-3 py-1 active:scale-[0.98]"
+            >
+              <Text className="text-xs font-medium text-white">Change</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
+
+      {/* Current Location Button - Hide if location is manually selected */}
+      {!selectedLocation && (
+        <Pressable
+          onPress={handleLocationPress}
+          className={cn(
+            "mt-4 h-12 flex-row items-center justify-center rounded-full bg-gray-100 active:scale-[0.98] active:opacity-70",
+            (isLoading || permissionDenied) && "opacity-50",
+          )}
+          accessibilityRole="button"
+          hitSlop={10}
+        >
+          <Ionicons name="locate" size={18} color="#111827" />
+          <Text className="ml-2 font-medium text-gray-900">
+            {isLoading ? "Fetching Location..." : "Use Current Location"}
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 };
