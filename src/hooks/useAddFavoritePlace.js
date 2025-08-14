@@ -48,7 +48,8 @@ export const useAddFavoritePlace = () => {
   }, []);
 
   // Handle location selection
-  const handleLocationSelected = useCallback((coords) => {
+  const handleLocationSelected = (coords) => {
+    console.warn("Showing coords: ", coords);
     if (!coords) return;
 
     // TODO: get the address from the coordinates
@@ -57,9 +58,15 @@ export const useAddFavoritePlace = () => {
     setLocation({
       latitude: coords.latitude,
       longitude: coords.longitude,
-      address: "UNKNOwN", // Temp value
+      address: "UNKNOWN", // Temp value
     });
-  }, []);
+  };
+
+  // Handle resetting the location
+  const handleResetLocation = () => {
+    setLocation(null);
+    Alert.alert("Location Reset", "The selected location has been cleared.");
+  };
 
   // Handle form submission
   const handleSubmit = useCallback(() => {
@@ -110,6 +117,7 @@ export const useAddFavoritePlace = () => {
     // Handlers
     handleImageSelected,
     handleLocationSelected,
+    handleResetLocation,
     handleSubmit,
   };
 };

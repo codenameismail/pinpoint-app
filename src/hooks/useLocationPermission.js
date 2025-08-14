@@ -1,17 +1,34 @@
-import { useIsFocused } from "@react-navigation/native";
 import {
   getForegroundPermissionsAsync,
   PermissionStatus,
   requestForegroundPermissionsAsync,
 } from "expo-location";
-import { useState, useEffect } from "react";
-import { Alert, Linking, AppState } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, AppState, Linking } from "react-native";
 
 // Custom hook for location permissions
 export const useLocationPermission = () => {
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [permissionDenied, setPermissionDenied] = useState(false);
-  const isFocused = useIsFocused();
+
+  // Check permissions when app comes to foreground
+  useEffect(() => {
+    // Initial check
+    checkPermissions();
+
+    // Setup AppState listener to detect when app returns from settings
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        // Re-check permissions when app comes back to foreground
+        checkPermissions();
+      }
+    });
+
+    // Cleanup subscription
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const checkPermissions = async () => {
     try {
@@ -90,30 +107,6 @@ export const useLocationPermission = () => {
       return null;
     }
   };
-
-  // Check permissions on mount and focus
-  useEffect(() => {
-    checkPermissions();
-  }, []);
-
-  useEffect(() => {
-    if (isFocused) checkPermissions();
-  }, [isFocused]);
-
-  // Listen for app state changes
-  useEffect(() => {
-    const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === "active") {
-        setTimeout(checkPermissions, 100);
-      }
-    };
-
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange,
-    );
-    return () => subscription?.remove();
-  }, []);
 
   return {
     permissionStatus,

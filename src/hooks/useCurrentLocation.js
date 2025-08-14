@@ -16,7 +16,7 @@ export const useCurrentLocation = () => {
     // Check permission first
     const permissions = await permissionCheck();
     if (permissions?.status !== PermissionStatus.GRANTED) {
-      return;
+      return null;
     }
 
     setError(null);
@@ -29,10 +29,14 @@ export const useCurrentLocation = () => {
         timeInterval: 3000,
       });
 
-      setCurrentLocation({
+      const locationData = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-      });
+      };
+
+      // Set state AND return the data directly
+      setCurrentLocation(locationData);
+      return locationData; // Return location data directly
     } catch (error) {
       console.error("Error getting location:", error);
 
@@ -45,6 +49,7 @@ export const useCurrentLocation = () => {
       }
 
       setError(errorMessage);
+      return null;
     } finally {
       setIsLoading(false);
     }
