@@ -27,13 +27,8 @@ const LocationPicker = ({
     checkPermissions,
   } = useLocationPermission();
 
-  const {
-    currentLocation,
-    isLoading,
-    error,
-    getAccurateLocation,
-    getEstimatedLocation,
-  } = useCurrentLocation();
+  const { isLoading, error, getAccurateLocation, getEstimatedLocation } =
+    useCurrentLocation();
 
   // Get initial estimated location (may not be accurate)
   useEffect(() => {
@@ -48,11 +43,6 @@ const LocationPicker = ({
       fetchEstimatedLocation();
     }
   }, []);
-
-  useEffect(() => {
-    console.log("Current location mounted: ", currentLocation);
-    console.log("Selected location mounted: ", selectedLocation);
-  }, [currentLocation]);
 
   // Handle current location button press
   const handleUseCurrentLocation = async () => {

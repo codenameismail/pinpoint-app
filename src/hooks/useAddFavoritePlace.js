@@ -1,14 +1,23 @@
 import { useCallback, useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Alert } from "react-native";
 
 import { useFavoritesStore } from "../store/useFavoritesStore";
 
 export const useAddFavoritePlace = () => {
+  const { latitude, longitude } = useLocalSearchParams();
+  const locationFromParams =
+    latitude && longitude
+      ? {
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+        }
+      : null;
+
   // Form state
   const [title, setTitle] = useState("");
   const [imageUri, setImageUri] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState(locationFromParams || null);
   const [description, setDescription] = useState("");
 
   // UI state
