@@ -4,20 +4,26 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import MapView, { Marker } from "react-native-maps";
 import HeaderBar from "../../components/HeaderBar";
+import { useRouter } from "expo-router";
 
 const MapScreen = () => {
+  const router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedLocation(coordinate);
-    console.log("Selected location:", coordinate);
   };
 
   const handleConfirm = () => {
-    // This is where you'll handle confirming the selected location
-    console.log("Confirmed location:", selectedLocation);
     // Navigate back with the selected location
+    router.navigate({
+      pathname: "/favorite/new",
+      params: {
+        latitude: selectedLocation.latitude.toString(),
+        longitude: selectedLocation.longitude.toString(),
+      },
+    });
   };
 
   return (
