@@ -49,7 +49,6 @@ export const useAddFavoritePlace = () => {
 
   // Handle location selection
   const handleLocationSelected = (coords) => {
-    console.warn("Showing coords: ", coords);
     if (!coords) return;
 
     // TODO: get the address from the coordinates
