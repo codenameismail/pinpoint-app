@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import { View, Text, Pressable, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import InputHeader from "./InputHeader";
 
 const ImagePlaceholder = ({ onPress }) => (
   <Pressable
@@ -42,8 +43,9 @@ const SelectedImage = ({ uri, onChangeImage }) => (
 );
 
 export const ImageSection = ({ pickedImageUri, onPickImage }) => (
-  <View className="mb-8">
-    <Text className="mb-2 text-base font-medium text-gray-900">Image</Text>
+  <View className="mb-8 gap-y-2">
+    {/* Title */}
+    <InputHeader title={"Image"} />
     {pickedImageUri ? (
       <SelectedImage uri={pickedImageUri} onChangeImage={onPickImage} />
     ) : (

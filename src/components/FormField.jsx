@@ -5,6 +5,7 @@ import { View, Text, TextInput, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { cn } from "../utils/cn";
+import InputHeader from "./newFavoriteScreen/InputHeader";
 
 export default function FormField({
   label,
@@ -19,9 +20,7 @@ export default function FormField({
 }) {
   return (
     <View className="gap-y-2">
-      {Boolean(label) && (
-        <Text className="text-base font-medium text-gray-900">{label}</Text>
-      )}
+      {Boolean(label) && <InputHeader title={label} />}
       <View className="relative">
         <TextInput
           className={cn(
