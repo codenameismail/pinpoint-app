@@ -8,6 +8,7 @@ import { cn } from "../../utils/cn";
 
 import { useLocationPermission } from "../../hooks/useLocationPermission";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
+import InputHeader from "./InputHeader";
 
 const LocationSection = () => {
   const { latitude, longitude } = useLocalSearchParams(); // Get individual params
@@ -53,6 +54,12 @@ const LocationSection = () => {
     }
   };
 
+  // function to handle resetting the selected location
+  const handleResetLocation = () => {
+    setSelectedLocation(null);
+    setDisplayLocation(null);
+  };
+
   // function for when the user clicks the preview map
   const handleMapPress = () => {
     if (permissionDenied) {
@@ -65,7 +72,22 @@ const LocationSection = () => {
 
   return (
     <View className="mb-8">
-      <Text className="mb-2 text-base font-medium text-gray-900">Location</Text>
+      {/* Title and Reset button */}
+      <View className="mb-2 flex-row items-center justify-between">
+        <InputHeader title={"Location"} />
+        <Pressable
+          onPress={handleResetLocation}
+          className="group h-8 w-8 items-center justify-center rounded-full bg-gray-200 active:scale-[0.98] active:opacity-80"
+          hitSlop={25}
+        >
+          <Ionicons
+            className="group-active:scale-[0.98] group-active:opacity-70"
+            name="refresh"
+            size={18}
+            color="#4b5563"
+          />
+        </Pressable>
+      </View>
 
       {/* Permission Denied UI */}
       {permissionDenied && (
@@ -109,8 +131,6 @@ const LocationSection = () => {
             }}
             showsUserLocation={!selectedLocation} // Only show user location if not manually selected
             showsMyLocationButton={false}
-            // scrollEnabled={false}
-            // zoomEnabled={false}
           >
             <Marker
               coordinate={displayLocation}
@@ -150,7 +170,7 @@ const LocationSection = () => {
       )}
 
       {/* Show selected location info and option to change */}
-      {selectedLocation && (
+      {displayLocation && (
         <View className="mt-4 rounded-lg bg-green-50 p-3">
           <View className="flex-row items-center justify-between">
             <View className="flex-1">
@@ -161,8 +181,8 @@ const LocationSection = () => {
                 </Text>
               </View>
               <Text className="mt-1 text-xs text-green-700">
-                Lat: {selectedLocation.latitude.toFixed(6)}, Lng:{" "}
-                {selectedLocation.longitude.toFixed(6)}
+                Lat: {displayLocation.latitude.toFixed(6)}, Lng:{" "}
+                {displayLocation.longitude.toFixed(6)}
               </Text>
             </View>
             <Pressable
@@ -175,8 +195,8 @@ const LocationSection = () => {
         </View>
       )}
 
-      {/* Current Location Button - Hide if location is manually selected */}
-      {!selectedLocation && (
+      {/* Current Location Button - Hide if location is available */}
+      {!displayLocation && (
         <Pressable
           onPress={handleLocationPress}
           className={cn(
