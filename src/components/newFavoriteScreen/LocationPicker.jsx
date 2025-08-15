@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { View, Text, Pressable, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { cn } from "../../utils/cn";
@@ -18,8 +18,6 @@ const LocationPicker = ({
   onLocationSelected,
   onResetLocation,
 }) => {
-  const router = useRouter();
-
   const {
     permissionDenied,
     requestPermission,
@@ -56,19 +54,6 @@ const LocationPicker = ({
         onLocationSelected(locationData);
       }
     }
-  };
-
-  // Handle map location selection
-  const handleOpenFullMap = () => {
-    router.push({
-      pathname: "/(protected)/map",
-      params: selectedLocation
-        ? {
-            latitude: selectedLocation.latitude.toString(),
-            longitude: selectedLocation.longitude.toString(),
-          }
-        : {},
-    });
   };
 
   // function to handle resetting the selected location
@@ -152,6 +137,7 @@ const LocationPicker = ({
 
           {/* Location options - Current and Manual Map */}
           <View className="mt-4 flex-row gap-x-2">
+            {/* Current Location Button */}
             <Pressable
               onPress={handleUseCurrentLocation}
               className={cn(
@@ -172,16 +158,29 @@ const LocationPicker = ({
               )}
             </Pressable>
 
-            <Pressable
-              onPress={handleOpenFullMap}
-              className="h-12 flex-1 flex-row items-center justify-center rounded-full bg-purple-100 active:scale-[0.98] active:opacity-80 disabled:opacity-50"
-              disabled={isLoading}
+            {/* Open Full Map Link-Button */}
+            <Link
+              href={{
+                pathname: "/(protected)/map",
+                params: selectedLocation
+                  ? {
+                      latitude: selectedLocation.latitude.toString(),
+                      longitude: selectedLocation.longitude.toString(),
+                    }
+                  : {},
+              }}
+              asChild
             >
-              <Ionicons name="map" size={18} color="#7e22ce" />
-              <Text className="ml-2 font-medium text-purple-700">
-                Select on Map
-              </Text>
-            </Pressable>
+              <Pressable
+                className="h-12 flex-1 flex-row items-center justify-center rounded-full bg-purple-100 active:scale-[0.98] active:opacity-80 disabled:opacity-50"
+                disabled={isLoading}
+              >
+                <Ionicons name="map" size={18} color="#7e22ce" />
+                <Text className="ml-2 font-medium text-purple-700">
+                  Select on Map
+                </Text>
+              </Pressable>
+            </Link>
           </View>
 
           {error && <Text className="mt-2 text-sm text-red-500">{error}</Text>}
