@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "expo-router";
+import { usePreventRemove } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
@@ -8,6 +10,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 
 import FormField from "../../../components/FormField";
@@ -18,8 +21,11 @@ import HeaderBar from "../../../components/HeaderBar";
 import { ImageSection } from "../../../components/newFavoriteScreen/ImageSection";
 
 import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
+import { useDraftFavoriteStore } from "../../../store/useDraftFavoriteStore";
 
 export default function AddFavoritePlaceScreen() {
+  const navigation = useNavigation();
+
   // Custom hook to manage the state and logic for adding a favorite place
   const {
     // Form state
@@ -42,7 +48,35 @@ export default function AddFavoritePlaceScreen() {
     handleSubmit,
   } = useAddFavoritePlace();
 
-  const scrollViewRef = React.useRef(null);
+  // thuli
+
+  // Get store functions
+  const { clearDraftFavorite, hasDraftContent } = useDraftFavoriteStore();
+
+  usePreventRemove(
+    hasDraftContent(), // 1. The condition to prevent removal (true if there's a draft)
+    ({ data }) => {
+      // 2. The callback to run when removal is prevented
+      Alert.alert(
+        "Discard changes?",
+        "You have unsaved changes. Are you sure you want to discard them and leave?",
+        [
+          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          {
+            text: "Discard",
+            style: "destructive",
+            onPress: () => {
+              clearDraftFavorite();
+              // Use the navigation to perform the original action
+              navigation.dispatch(data.action);
+            },
+          },
+        ],
+      );
+    },
+  );
+
+  const scrollViewRef = useRef(null);
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={["top", "bottom"]}>
