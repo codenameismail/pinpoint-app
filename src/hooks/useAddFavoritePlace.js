@@ -47,7 +47,6 @@ export const useAddFavoritePlace = () => {
       imageUri,
       description,
     });
-    console.log("updated drafts");
   }, [title, imageUri, description]);
 
   // Validation
