@@ -1,10 +1,16 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Alert } from "react-native";
 
 import { useFavoritesStore } from "../store/useFavoritesStore";
+import { useDraftFavoriteStore } from "../store/useDraftFavoriteStore";
 
 export const useAddFavoritePlace = () => {
+  /*
+   * Get latitude and longitude from URL params
+   * This is when the user selects a location from a map and gets redirected to the new favorite screen
+   * e.g. /(protected)/favorite/new?latitude=12.34&longitude=56.78
+   */
   const { latitude, longitude } = useLocalSearchParams();
   const locationFromParams =
     latitude && longitude
@@ -14,18 +20,35 @@ export const useAddFavoritePlace = () => {
         }
       : null;
 
+  // Get draft data and update functions from store
+  const draftFavorite = useDraftFavoriteStore((state) => state.draftFavorite);
+  const updateDraftFavorite = useDraftFavoriteStore(
+    (state) => state.updateDraftFavorite,
+  );
+  // Get the add function from store
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+
   // Form state
-  const [title, setTitle] = useState("");
-  const [imageUri, setImageUri] = useState(null);
+  const [title, setTitle] = useState(draftFavorite.title || "");
+  const [imageUri, setImageUri] = useState(draftFavorite.imageUri || null);
   const [location, setLocation] = useState(locationFromParams || null);
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(
+    draftFavorite.description || "",
+  );
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPickerVisible, setPickerVisible] = useState(false);
 
-  // Get the add function from store
-  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  // Keep draft in sync with local state
+  useEffect(() => {
+    updateDraftFavorite({
+      title,
+      imageUri,
+      description,
+    });
+    console.log("updated drafts");
+  }, [title, imageUri, description]);
 
   // Validation
   const validateInputs = () => {
