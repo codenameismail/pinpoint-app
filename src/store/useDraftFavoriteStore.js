@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const useDraftFavoriteStore = create((set) => ({
+export const useDraftFavoriteStore = create((set, get) => ({
   // Temporary form state storage
   draftFavorite: {
     title: "",
@@ -27,5 +27,15 @@ export const useDraftFavoriteStore = create((set) => ({
         description: "",
       },
     });
+  },
+
+  // Check if draft is empty (no unsaved changes)
+  hasDraftContent: () => {
+    const { draftFavorite } = get();
+    return (
+      draftFavorite.title.trim() !== "" ||
+      draftFavorite.imageUri !== null ||
+      draftFavorite.description.trim() !== ""
+    );
   },
 }));
