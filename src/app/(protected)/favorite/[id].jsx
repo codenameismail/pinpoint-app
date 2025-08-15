@@ -20,9 +20,7 @@ import { formatDate } from "../../../utils/helpers";
 import { cn } from "../../../utils/cn";
 
 const FavoriteDetailScreen = () => {
-  // Normalize param: string | string[] | undefined -> string | null
-  const { id: idParam } = useLocalSearchParams();
-  const id = Array.isArray(idParam) ? idParam[0] : idParam || null;
+  const { id } = useLocalSearchParams();
 
   const getFavoriteById = useFavoritesStore((state) => state.getFavoriteById);
 
