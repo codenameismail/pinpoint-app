@@ -122,7 +122,11 @@ export const useAddFavoritePlace = () => {
         id: generateId(),
         title,
         imageUri,
-        location, // an object with {latitude, longitude}
+        location: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          address: "Some Unknown Address",
+        }, // an object with {latitude, longitude}
         description: description || "No description provided",
         dateAdded: new Date(),
       };
