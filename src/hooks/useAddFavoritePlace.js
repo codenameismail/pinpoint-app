@@ -6,6 +6,8 @@ import { useFavoritesStore } from "../store/useFavoritesStore";
 import { useDraftFavoriteStore } from "../store/useDraftFavoriteStore";
 import { useLocationStore } from "../store/useLocationStore";
 
+import { generateId } from "../utils/helpers";
+
 export const useAddFavoritePlace = () => {
   /*
    * Get latitude and longitude from the useLocationStore
@@ -35,11 +37,11 @@ export const useAddFavoritePlace = () => {
   const addFavorite = useFavoritesStore((state) => state.addFavorite);
 
   // Form state
-  const [title, setTitle] = useState(draftFavorite.title || "");
+  const [title, setTitle] = useState(draftFavorite.title || "Some Title 01");
   const [imageUri, setImageUri] = useState(draftFavorite.imageUri || null);
   const [location, setLocation] = useState(pickedLocation || null);
   const [description, setDescription] = useState(
-    draftFavorite.description || "",
+    draftFavorite.description || "Some Description 01",
   );
 
   // UI state
@@ -113,7 +115,7 @@ export const useAddFavoritePlace = () => {
     try {
       // Create a new favorite
       const newFavorite = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         title,
         imageUri,
         location, // an object with {latitude, longitude}
