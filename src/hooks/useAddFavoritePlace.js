@@ -33,15 +33,19 @@ export const useAddFavoritePlace = () => {
   const updateDraftFavorite = useDraftFavoriteStore(
     (state) => state.updateDraftFavorite,
   );
+  const clearDraftFavorite = useDraftFavoriteStore(
+    (state) => state.clearDraftFavorite,
+  );
+
   // Get the add function from store
   const addFavorite = useFavoritesStore((state) => state.addFavorite);
 
   // Form state
-  const [title, setTitle] = useState(draftFavorite.title || "Some Title 01");
+  const [title, setTitle] = useState(draftFavorite.title || "");
   const [imageUri, setImageUri] = useState(draftFavorite.imageUri || null);
   const [location, setLocation] = useState(pickedLocation || null);
   const [description, setDescription] = useState(
-    draftFavorite.description || "Some Description 01",
+    draftFavorite.description || "",
   );
 
   // UI state
@@ -125,6 +129,9 @@ export const useAddFavoritePlace = () => {
 
       // add to store
       addFavorite(newFavorite);
+
+      // clear the draft state
+      clearDraftFavorite();
 
       // Navigate back
       router.replace("/(protected)/");
