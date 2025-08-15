@@ -48,8 +48,6 @@ export default function AddFavoritePlaceScreen() {
     handleSubmit,
   } = useAddFavoritePlace();
 
-  // thuli
-
   // Get store functions
   const { clearDraftFavorite, hasDraftContent } = useDraftFavoriteStore();
 
