@@ -14,20 +14,20 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 
+import { useFavoritesStore } from "../../../store/useFavoritesStore";
+
 import { formatDate } from "../../../utils/helpers";
 import { cn } from "../../../utils/cn";
-import { favorites } from "../../../data/favorites";
 
 const FavoriteDetailScreen = () => {
   // Normalize param: string | string[] | undefined -> string | null
   const { id: idParam } = useLocalSearchParams();
   const id = Array.isArray(idParam) ? idParam[0] : idParam || null;
 
+  const getFavoriteById = useFavoritesStore((state) => state.getFavoriteById);
+
   // Lookup and memoize the current favorite
-  const favoritePlace = useMemo(
-    () => favorites.find((fav) => fav.id === id) || null,
-    [id],
-  );
+  const favoritePlace = getFavoriteById(id);
 
   const handleBack = useCallback(() => {
     router.back();
@@ -72,6 +72,11 @@ const FavoriteDetailScreen = () => {
     [favoritePlace],
   );
 
+  // Determine the image source based on what's available
+  const imageSource = favoritePlace.image
+    ? favoritePlace.image
+    : { uri: favoritePlace.imageUri };
+
   // Fallback UI if param is missing or not found
   if (!id || !favoritePlace) {
     return (
@@ -114,7 +119,7 @@ const FavoriteDetailScreen = () => {
         {/* Hero Image */}
         <View className="relative">
           <ImageBackground
-            source={favoritePlace.image}
+            source={imageSource}
             className="h-96 w-full"
             resizeMode="cover"
           >

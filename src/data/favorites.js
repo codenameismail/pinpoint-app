@@ -9,7 +9,7 @@ export const favorites = [
   {
     id: "f1",
     title: "The Coffee Bean",
-    image: coffeeImg,
+    imageUri: coffeeImg,
     location: {
       latitude: 34.052235,
       longitude: -118.243683,
@@ -21,7 +21,7 @@ export const favorites = [
   {
     id: "f2",
     title: "Central Park",
-    image: parkImg,
+    imageUri: parkImg,
     location: {
       latitude: 40.785091,
       longitude: -73.968285,
@@ -34,7 +34,7 @@ export const favorites = [
   {
     id: "f3",
     title: "The Art Museum",
-    image: artImg,
+    imageUri: artImg,
     location: {
       latitude: 38.891298,
       longitude: -77.019965,
@@ -46,7 +46,7 @@ export const favorites = [
   {
     id: "f4",
     title: "The Bookstore",
-    image: bookstoreImg,
+    imageUri: bookstoreImg,
     location: {
       latitude: 37.774929,
       longitude: -122.419418,
@@ -58,7 +58,7 @@ export const favorites = [
   {
     id: "f5",
     title: "Gourmet Restaurant",
-    image: restaurantImg,
+    imageUri: restaurantImg,
     location: {
       latitude: 48.856613,
       longitude: 2.352222,
@@ -71,7 +71,7 @@ export const favorites = [
   {
     id: "f6",
     title: "Sunny Beach",
-    image: beachImg,
+    imageUri: beachImg,
     location: {
       latitude: 25.790654,
       longitude: -80.1300455,

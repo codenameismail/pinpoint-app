@@ -13,7 +13,10 @@ const FavoriteCard = ({ favorite }) => {
       params: { id: favorite.id },
     });
   };
-
+  // Determine the image source based on what's available
+  const imageSource = favorite.image
+    ? favorite.image
+    : { uri: favorite.imageUri };
   const address =
     favorite.location.address?.split(",").slice(0, 2).join(", ") || "Unknown";
   return (
@@ -24,7 +27,7 @@ const FavoriteCard = ({ favorite }) => {
       {/* Image Container */}
       <View className="relative mb-3 w-full">
         <Image
-          source={favorite.image}
+          source={imageSource}
           className="h-40 w-full rounded-2xl"
           resizeMode="cover"
         />
@@ -51,6 +54,7 @@ FavoriteCard.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     image: PropTypes.any.isRequired,
+    imageUri: PropTypes.string.isRequired,
     location: PropTypes.shape({
       latitude: PropTypes.number.isRequired,
       longitude: PropTypes.number.isRequired,
