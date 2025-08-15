@@ -122,8 +122,8 @@ const LocationPicker = ({
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                 }}
-                scrollEnabled={true}
-                zoomEnabled={true}
+                scrollEnabled={false}
+                zoomEnabled={false}
               >
                 <Marker coordinate={selectedLocation} pinColor="purple" />
               </MapView>
