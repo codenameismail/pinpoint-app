@@ -1,24 +1,30 @@
 import { useCallback, useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { Alert } from "react-native";
 
 import { useFavoritesStore } from "../store/useFavoritesStore";
 import { useDraftFavoriteStore } from "../store/useDraftFavoriteStore";
+import { useLocationStore } from "../store/useLocationStore";
 
 export const useAddFavoritePlace = () => {
   /*
-   * Get latitude and longitude from URL params
-   * This is when the user selects a location from a map and gets redirected to the new favorite screen
-   * e.g. /(protected)/favorite/new?latitude=12.34&longitude=56.78
+   * Get latitude and longitude from the useLocationStore
+   * This is when the user selects a location from a map and gets sent back to the new favorite screen
    */
-  const { latitude, longitude } = useLocalSearchParams();
-  const locationFromParams =
-    latitude && longitude
-      ? {
-          latitude: parseFloat(latitude),
-          longitude: parseFloat(longitude),
-        }
-      : null;
+  const pickedLocation = useLocationStore((state) => state.pickedLocation);
+  const clearPickedLocation = useLocationStore(
+    (state) => state.clearPickedLocation,
+  );
+
+  useEffect(() => {
+    if (pickedLocation) {
+      // Update the local state with the new location from store
+      setLocation(pickedLocation);
+
+      // Optional: Clear the store after using the value
+      clearPickedLocation();
+    }
+  }, [pickedLocation]);
 
   // Get draft data and update functions from store
   const draftFavorite = useDraftFavoriteStore((state) => state.draftFavorite);
@@ -31,7 +37,7 @@ export const useAddFavoritePlace = () => {
   // Form state
   const [title, setTitle] = useState(draftFavorite.title || "");
   const [imageUri, setImageUri] = useState(draftFavorite.imageUri || null);
-  const [location, setLocation] = useState(locationFromParams || null);
+  const [location, setLocation] = useState(pickedLocation || null);
   const [description, setDescription] = useState(
     draftFavorite.description || "",
   );

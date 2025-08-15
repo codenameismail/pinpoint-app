@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import MapView, { Marker } from "react-native-maps";
@@ -8,8 +8,18 @@ import { View, Text, Pressable } from "react-native";
 
 import HeaderBar from "../../components/HeaderBar";
 
+// Custom hook to manage location state
+import { useLocationStore } from "../../store/useLocationStore";
+
 const MapScreen = () => {
+  const router = useRouter();
   const { latitude, longitude } = useLocalSearchParams();
+
+  // Get the action from your store to set the FINAL location
+  const setPickedLocation = useLocationStore(
+    (state) => state.setPickedLocation,
+  );
+
   const initialLocation =
     latitude && longitude
       ? {
@@ -18,30 +28,27 @@ const MapScreen = () => {
         }
       : null;
 
-  const router = useRouter();
-  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
-
-  // TODO: Implement after getting function to fetch address from coords
-  // const [isGettingAddress, setIsGettingAddress] = useState(false);
+  // Use local state for the temporary selection on this screen
+  const [currentSelection, setCurrentSelection] = useState(initialLocation);
 
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
-    setSelectedLocation(coordinate);
+    // Update the local state, not the global one
+    setCurrentSelection(coordinate);
   };
 
   const handleConfirm = () => {
-    // TODO: get address for the selected location than navigate back with coords and address
-
-    // Navigate back with just the coordinates
-    router.navigate({
-      pathname: "/(protected)/favorite/new",
-      params: {
-        latitude: selectedLocation.latitude,
-        longitude: selectedLocation.longitude,
-      },
-    });
+    if (currentSelection) {
+      // Update the global store with the final choice
+      console.log(
+        "Map.jsx - setting the picked location in store: ",
+        currentSelection,
+      );
+      setPickedLocation(currentSelection);
+    }
+    // Then, go back
+    router.back();
   };
-
   return (
     <SafeAreaView className="flex-1 bg-white" edges={["top", "bottom"]}>
       <StatusBar style="dark" />
@@ -52,7 +59,7 @@ const MapScreen = () => {
           onPress={handleMapPress}
           style={{ flex: 1 }}
           initialRegion={{
-            ...(selectedLocation || {
+            ...(currentSelection || {
               latitude: 37.78825,
               longitude: -122.4324,
             }),
@@ -61,10 +68,10 @@ const MapScreen = () => {
           }}
           showsUserLocation={true}
         >
-          {selectedLocation && (
+          {currentSelection && (
             <Marker
               pinColor="purple"
-              coordinate={selectedLocation}
+              coordinate={currentSelection}
               title="Selected Location"
             />
           )}
@@ -78,7 +85,7 @@ const MapScreen = () => {
       </View>
 
       <View className="border-t border-gray-100 bg-white px-4 py-4">
-        {selectedLocation && (
+        {currentSelection && (
           <Pressable
             onPress={handleConfirm}
             className="h-12 items-center justify-center rounded-full bg-purple-600 active:scale-[0.98] active:opacity-70"
