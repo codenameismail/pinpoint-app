@@ -13,7 +13,7 @@ export const useFavoritesStore = create(
       //   add a new favorite
       addFavorite: (favoriteObject) => {
         set((state) => ({
-          favorites: [...state.favorites, favoriteObject],
+          favorites: [favoriteObject, ...state.favorites],
         }));
       },
 

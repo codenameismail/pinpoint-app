@@ -13,6 +13,9 @@ const FavoriteCard = ({ favorite }) => {
       params: { id: favorite.id },
     });
   };
+
+  const address =
+    favorite.location.address?.split(",").slice(0, 2).join(", ") || "Unknown";
   return (
     <Pressable
       onPress={handlePress}
@@ -36,7 +39,7 @@ const FavoriteCard = ({ favorite }) => {
           {favorite.title}
         </Text>
         <Text className="text-sm text-gray-500" numberOfLines={1}>
-          {favorite.location.address.split(",").slice(0, 2).join(", ")}
+          {address}
         </Text>
       </View>
     </Pressable>
