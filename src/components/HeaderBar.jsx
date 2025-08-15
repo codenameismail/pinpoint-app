@@ -5,12 +5,29 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-const HeaderBar = ({ title }) => {
+/**
+ * HeaderBar - A navigation header component with a back button
+ *
+ * @param {Object} props
+ * @param {string} props.title - Text to display as the header title
+ * @param {Function} [props.onBackPress] - Optional custom function to handle back button press
+ *                                        If not provided, defaults to router.back()
+ */
+const HeaderBar = ({ title, onBackPress }) => {
   const router = useRouter();
+
+  const handleBackPress = () => {
+    if (onBackPress) {
+      onBackPress();
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <View className="flex-row items-center justify-between border-b border-gray-100 bg-white py-3">
       <TouchableOpacity
-        onPress={() => router.back()}
+        onPress={handleBackPress}
         className="flex-row items-center"
         activeOpacity={0.7}
       >
@@ -27,6 +44,7 @@ const HeaderBar = ({ title }) => {
 
 HeaderBar.propTypes = {
   title: PropTypes.string.isRequired,
+  onBackPress: PropTypes.func,
 };
 
 export default HeaderBar;
