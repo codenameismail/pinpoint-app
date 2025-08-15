@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import { View, Text, Pressable, ActivityIndicator } from "react-native";
@@ -27,22 +27,9 @@ const LocationPicker = ({
     checkPermissions,
   } = useLocationPermission();
 
-  const { isLoading, error, getAccurateLocation, getEstimatedLocation } =
+  const { isLoading, error, getAccurateLocation } =
     useCurrentLocation();
 
-  // Get initial estimated location (may not be accurate)
-  useEffect(() => {
-    if (!selectedLocation) {
-      const fetchEstimatedLocation = async () => {
-        const estimateLocation = await getEstimatedLocation(checkPermissions);
-        if (estimateLocation) {
-          onLocationSelected(estimateLocation);
-        }
-      };
-
-      fetchEstimatedLocation();
-    }
-  }, []);
 
   // Handle current location button press
   const handleUseCurrentLocation = async () => {
