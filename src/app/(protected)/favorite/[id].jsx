@@ -70,9 +70,10 @@ const FavoriteDetailScreen = () => {
     [favoritePlace],
   );
 
+  const isImageUriNumber = typeof favoritePlace.imageUri === "number";
   // Determine the image source based on what's available
-  const imageSource = favoritePlace.image
-    ? favoritePlace.image
+  const imageSource = isImageUriNumber
+    ? favoritePlace.imageUri
     : { uri: favoritePlace.imageUri };
 
   // Fallback UI if param is missing or not found

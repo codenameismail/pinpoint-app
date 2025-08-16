@@ -13,10 +13,15 @@ const FavoriteCard = ({ favorite }) => {
       params: { id: favorite.id },
     });
   };
+
+  const isImageUriNumber = typeof favorite.imageUri === "number";
+
   // Determine the image source based on what's available
-  const imageSource = favorite.image
-    ? favorite.image
+  const imageSource = isImageUriNumber
+    ? favorite.imageUri
     : { uri: favorite.imageUri };
+
+  // console.log("Image Source for fav card: ", favorite);
   const address =
     favorite.location.address?.split(",").slice(0, 2).join(", ") || "Unknown";
   return (
