@@ -63,8 +63,8 @@ export const useLoginForm = () => {
     // 4. If validation passes, try to login the user
     try {
       // const result = await loginUser(email, password);
-      // authenticate(result); // Store user data in zustand store
-      Alert.alert("Success!", "You have successfully logged in.");
+      authenticate("user logged In"); // Store user data in zustand store
+      console.log("Login successful, navigating to protected routes");
       router.replace("/(protected)"); // Navigate to protected routes
     } catch (error) {
       // 5. Handle any errors from the API

@@ -1,8 +1,16 @@
 import React from "react";
 
-import { Stack } from "expo-router";
+import { Stack, Redirect } from "expo-router";
+
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function ProtectedLayout() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  if (!isAuthenticated) {
+    return <Redirect href={"/(auth)/login"} />;
+  }
+
   return (
     <Stack initialRouteName="index">
       <Stack.Screen
@@ -10,13 +18,6 @@ export default function ProtectedLayout() {
         options={{
           headerShown: false,
           title: "All Favorites",
-          headerStyle: { backgroundColor: "#f3f4f6" },
-          headerTintColor: "#000",
-          headerTitleStyle: { fontWeight: "bold" },
-          headerTitleAlign: "left",
-          contentStyle: {
-            backgroundColor: "#f3f4f6",
-          },
         }}
       />
       <Stack.Screen

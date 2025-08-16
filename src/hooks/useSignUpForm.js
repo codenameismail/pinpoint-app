@@ -71,7 +71,8 @@ export const useSignUpForm = () => {
     try {
       // const result = await createUser(email, password);
       // authenticate(result); // Store user data in zustand store
-      Alert.alert("Success!", "Your account has been created.");
+      authenticate("user signed up"); // Store user data in zustand store
+      console.log("Sign up successful, navigating to protected routes");
       router.replace("/(protected)");
     } catch (error) {
       // 5. Handle any errors from the API
