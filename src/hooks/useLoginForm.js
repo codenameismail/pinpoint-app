@@ -2,12 +2,9 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 import { Alert } from "react-native";
 
-import { useAuthStore } from "../store/useAuthStore";
-
 import { DUMMY_USERS } from "../data/dummy-user";
 
 export const useLoginForm = () => {
-  const authenticate = useAuthStore((state) => state.authenticate);
   const router = useRouter();
   const [email, setEmail] = useState(DUMMY_USERS[3].email || "");
   const [password, setPassword] = useState(DUMMY_USERS[3].password || "");
@@ -63,7 +60,6 @@ export const useLoginForm = () => {
     // 4. If validation passes, try to login the user
     try {
       // const result = await loginUser(email, password);
-      authenticate("user logged In"); // Store user data in zustand store
       console.log("Login successful, navigating to protected routes");
       router.replace("/(protected)"); // Navigate to protected routes
     } catch (error) {
