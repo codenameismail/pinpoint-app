@@ -4,14 +4,32 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, Pressable, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { supabase } from "../../utils/supabase";
+
 const ProfileScreen = () => {
-  const handleLogout = () => {
+  // Function to handle sign out
+  const signUserOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw error;
+      }
+      console.log("User signed out successfully");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+      console.error("Sign out error:", error);
+    }
+  };
+
+  const handleSignOut = () => {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Sign Out",
         style: "destructive",
-        onPress: () => console.log("Logging Out..."),
+        onPress: () => {
+          signUserOut();
+        },
       },
     ]);
   };
@@ -53,7 +71,7 @@ const ProfileScreen = () => {
 
         {/* Logout Button */}
         <Pressable
-          onPress={handleLogout}
+          onPress={handleSignOut}
           className="flex-row items-center justify-center rounded-xl border border-red-200 bg-red-50 p-4"
         >
           <Ionicons name="log-out-outline" size={20} color="#ef4444" />
