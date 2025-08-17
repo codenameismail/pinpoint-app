@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useRouter } from "expo-router";
 import { Alert } from "react-native";
 
+import { supabase } from "../utils/supabase";
 import { DUMMY_USERS } from "../data/dummy-user";
 
 export const useLoginForm = () => {
-  const router = useRouter();
   const [email, setEmail] = useState(DUMMY_USERS[3].email || "");
   const [password, setPassword] = useState(DUMMY_USERS[3].password || "");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,14 +32,6 @@ export const useLoginForm = () => {
     return validationErrors;
   };
 
-  const clearForm = () => {
-    setEmail("");
-    setPassword("");
-    setShowPassword(false);
-    setErrors({});
-    setLoading(false);
-  };
-
   const handleLogin = async () => {
     // 1. Clear old errors and start loading
     setErrors({});
@@ -59,9 +50,14 @@ export const useLoginForm = () => {
 
     // 4. If validation passes, try to login the user
     try {
-      // const result = await loginUser(email, password);
-      console.log("Login successful, navigating to protected routes");
-      router.replace("/(protected)"); // Navigate to protected routes
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        throw error; // If there's an error, throw it to be caught below
+      }
+      console.log("User Logged in successfully:", data);
     } catch (error) {
       // 5. Handle any errors from the API
       setErrors({ api: error.message });
@@ -69,7 +65,6 @@ export const useLoginForm = () => {
       console.error("Login error:", error.message);
     } finally {
       setLoading(false); // Stop loading regardless of success or failure
-      clearForm(); // Clear the form inputs
     }
   };
 
