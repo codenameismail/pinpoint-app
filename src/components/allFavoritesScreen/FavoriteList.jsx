@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { FlatList } from "react-native";
 
 import FavoriteCard from "./FavoriteCard";
-import ListHeader from "./ListHeader";
+import FavoritesScreenHeader from "./FavoritesScreenHeader";
 
 /** * FavoriteList component to display a list of favorite locations.
  * It uses FlatList for efficient rendering of items.
@@ -28,7 +28,7 @@ const FavoriteList = ({ favorites }) => {
       columnWrapperStyle={{
         justifyContent: "space-between",
       }}
-      ListHeaderComponent={() => <ListHeader />}
+      ListHeaderComponent={() => <FavoritesScreenHeader />}
     />
   );
 };
