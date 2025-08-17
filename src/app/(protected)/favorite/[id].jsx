@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 
-import { useFavoritesStore } from "../../../store/useFavoritesStore";
+import { useFavoritesStore } from "../../../store/favoritesStore";
 
 import { formatDate } from "../../../utils/helpers";
 import { cn } from "../../../utils/cn";

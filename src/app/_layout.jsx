@@ -13,10 +13,7 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
         }}
-      >
-        <Stack.Screen name="(auth)/login" options={{ animation: "none" }} />
-        <Stack.Screen name="(auth)/sign-up" options={{ animation: "none" }} />
-      </Stack>
+      />
     </SafeAreaProvider>
   );
 }

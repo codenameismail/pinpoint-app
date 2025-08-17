@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FavoriteList from "../../components/allFavoritesScreen/FavoriteList";
 import FabButton from "../../components/allFavoritesScreen/FabButton";
 
-import { useFavoritesStore } from "../../store/useFavoritesStore";
+import { useFavoritesStore } from "../../store/favoritesStore";
 import { useAuthStore } from "../../store/useAuthStore";
 
 export default function AllFavoritesScreen() {

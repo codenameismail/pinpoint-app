@@ -8,7 +8,7 @@ import { View, Text, Pressable, ActivityIndicator } from "react-native";
 
 import HeaderBar from "../../components/HeaderBar";
 
-import { useLocationStore } from "../../store/useLocationStore";
+import { useLocationStore } from "../../store/locationStore";
 import { useCurrentLocation } from "../../hooks/useCurrentLocation";
 import { useLocationPermission } from "../../hooks/useLocationPermission";
 

@@ -7,9 +7,9 @@ import { useAuthStore } from "../../store/useAuthStore";
 export default function ProtectedLayout() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  if (!isAuthenticated) {
-    return <Redirect href={"/(auth)/login"} />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Redirect href={"/(auth)/login"} />;
+  // }
 
   return (
     <Stack initialRouteName="index">

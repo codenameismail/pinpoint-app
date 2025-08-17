@@ -21,7 +21,7 @@ import HeaderBar from "../../../components/HeaderBar";
 import { ImageSection } from "../../../components/newFavoriteScreen/ImageSection";
 
 import { useAddFavoritePlace } from "../../../hooks/useAddFavoritePlace";
-import { useDraftFavoriteStore } from "../../../store/useDraftFavoriteStore";
+import { useDraftFavoriteStore } from "../../../store/draftFavoriteStore";
 
 export default function AddFavoritePlaceScreen() {
   const navigation = useNavigation();

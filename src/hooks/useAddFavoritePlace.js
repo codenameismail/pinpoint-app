@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 
-import { useFavoritesStore } from "../store/useFavoritesStore";
-import { useDraftFavoriteStore } from "../store/useDraftFavoriteStore";
-import { useLocationStore } from "../store/useLocationStore";
+import { useFavoritesStore } from "../store/favoritesStore";
+import { useDraftFavoriteStore } from "../store/draftFavoriteStore";
+import { useLocationStore } from "../store/locationStore";
 
 import { generateId } from "../utils/helpers";
 
