@@ -6,6 +6,8 @@ import { useDraftFavoriteStore } from "../store/draftFavoriteStore";
 import { useLocationStore } from "../store/locationStore";
 import { useFavoritesStoreDB } from "../store/favoritesStoreDB";
 
+import { uploadImage } from "../utils/imageUploader";
+
 export const useAddFavoritePlace = () => {
   /*
    * Get latitude and longitude from the useLocationStore
@@ -115,10 +117,15 @@ export const useAddFavoritePlace = () => {
     setIsSubmitting(true);
 
     try {
+      // Upload image first and get the public URL
+      console.log("Uploading image...");
+      const imageUrl = await uploadImage(imageUri);
+      console.log("Image uploaded successfully:", imageUrl);
+
       // Create the data object matching the store's expectation
       const newFavoriteData = {
         title,
-        image_uri: imageUri, // Match column name
+        image_uri: imageUrl, // uusing the Supabase URL instead of local URI
         location: {
           latitude: location.latitude,
           longitude: location.longitude,
@@ -127,16 +134,17 @@ export const useAddFavoritePlace = () => {
         description: description || "No description provided",
       };
 
-      // Call the async store function
+      // Save to database
+      console.log("Saving favorite to database...");
       await addFavoriteToDB(newFavoriteData);
 
       // clear the draft state
       clearDraftFavorite();
-
       // Navigate back
       router.replace("/(protected)/");
     } catch (error) {
-      Alert.alert("Error", error);
+      console.error("Error saving favorite:", error);
+      Alert.alert("Error", `Failed to save favorite: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
