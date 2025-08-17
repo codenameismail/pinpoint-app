@@ -60,7 +60,7 @@ export const useLoginForm = () => {
       if (error) {
         throw error; // If there's an error, throw it to be caught below
       }
-      console.log("User Logged in successfully:", data);
+      console.log("User Logged in successfully:", Object.keys(data.user));
       router.replace("/(protected)"); // Redirect to the protected area
     } catch (error) {
       // 5. Handle any errors from the API

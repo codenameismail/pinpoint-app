@@ -67,7 +67,7 @@ export const useSignUpForm = () => {
       if (error) {
         throw error; // If there's an error, throw it to be caught below
       }
-      console.log("User created successfully:", data);
+      console.log("User created successfully:", Object.keys(data.user));
       router.replace("/(protected)"); // Redirect to the protected area
     } catch (error) {
       // 5. Handle any errors from the API
