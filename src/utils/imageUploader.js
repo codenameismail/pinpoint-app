@@ -45,7 +45,7 @@ export const uploadImage = async (uri, bucketName = "favorites_images") => {
     // Get the public URL
     const {
       data: { publicUrl },
-    } = supabase.storage.from("favorite-images").getPublicUrl(filePath);
+    } = supabase.storage.from(bucketName).getPublicUrl(filePath);
 
     return publicUrl;
   } catch (error) {
