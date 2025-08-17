@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import FavoriteList from "../../components/allFavoritesScreen/FavoriteList";
 import FabButton from "../../components/allFavoritesScreen/FabButton";
 
-import { useFavoritesStore } from "../../store/favoritesStore";
+import { useFavoritesStoreDB } from "../../store/favoritesStoreDB";
+import { Text, ActivityIndicator } from "react-native";
 
 export default function AllFavoritesScreen() {
-  const favorites = useFavoritesStore((state) => state.favorites);
+  const favorites = useFavoritesStoreDB((state) => state.favorites);
+  const fetchFavoritesFromDB = useFavoritesStoreDB(
+    (state) => state.fetchFavoritesFromDB,
+  );
+  const isLoading = useFavoritesStoreDB((state) => state.isLoading);
+
+  useEffect(() => {
+    fetchFavoritesFromDB();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="mt-4 italic text-slate-500">Loading favorites...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 px-4" edges={["top", "right", "left"]}>
