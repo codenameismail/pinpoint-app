@@ -58,7 +58,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Pin Point uses your location to create and manage location-based pins and reminders"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
