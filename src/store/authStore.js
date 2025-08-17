@@ -27,12 +27,16 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
-// Custom hook to initialize auth state
+// A custom hook to initialize the auth state on app startup.
 export const useInitializeAuth = () => {
   const initialize = useAuthStore((state) => state.initialize);
 
   useEffect(() => {
-    const cleanup = initialize();
-    return cleanup;
+    const unsubscribe = initialize();
+
+    // cleanup the subscription on unmount
+    return () => {
+      unsubscribe();
+    };
   }, [initialize]);
 };
