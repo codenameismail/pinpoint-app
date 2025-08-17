@@ -65,6 +65,8 @@ export const useFavoritesStoreDB = create((set, get) => ({
         throw error;
       }
 
+      console.log("Favorite added successfully:", data);
+
       set((state) => ({
         favorites: [data, ...state.favorites],
         error: null,

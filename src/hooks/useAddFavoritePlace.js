@@ -135,7 +135,6 @@ export const useAddFavoritePlace = () => {
       };
 
       // Save to database
-      console.log("Saving favorite to database...");
       await addFavoriteToDB(newFavoriteData);
 
       // clear the draft state
