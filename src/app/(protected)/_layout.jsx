@@ -1,15 +1,28 @@
 import React from "react";
 
+import { ActivityIndicator } from "react-native";
 import { Stack, Redirect } from "expo-router";
 
-import { useAuthStore } from "../../store/useAuthStore";
+import { useAuthStore } from "../../store/authStore";
 
 export default function ProtectedLayout() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const session = useAuthStore((state) => state.session);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
-  // if (!isAuthenticated) {
-  //   return <Redirect href={"/(auth)/login"} />;
-  // }
+  // The isLoading check is now more robust.
+  // We wait until the session is explicitly loaded.
+  if (isLoading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        style={{ flex: 1, justifyContent: "center" }}
+      />
+    );
+  }
+
+  if (!session) {
+    return <Redirect href={"/(auth)/sign-up"} />;
+  }
 
   return (
     <Stack initialRouteName="index">
