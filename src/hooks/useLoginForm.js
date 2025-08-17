@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Alert } from "react-native";
+import { useRouter } from "expo-router";
 
 import { supabase } from "../utils/supabase";
 import { DUMMY_USERS } from "../data/dummy-user";
@@ -10,6 +11,8 @@ export const useLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const router = useRouter();
 
   const isValidEmail = (value) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
@@ -58,6 +61,7 @@ export const useLoginForm = () => {
         throw error; // If there's an error, throw it to be caught below
       }
       console.log("User Logged in successfully:", data);
+      router.replace("/(protected)"); // Redirect to the protected area
     } catch (error) {
       // 5. Handle any errors from the API
       setErrors({ api: error.message });

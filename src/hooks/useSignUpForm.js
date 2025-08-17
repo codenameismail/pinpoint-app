@@ -5,6 +5,7 @@ import { formatDate } from "../utils/helpers";
 import { supabase } from "../utils/supabase";
 
 import { DUMMY_USERS } from "../data/dummy-user";
+import { useRouter } from "expo-router";
 
 export const useSignUpForm = () => {
   const [name, setName] = useState(DUMMY_USERS[0].name || "");
@@ -14,6 +15,8 @@ export const useSignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const router = useRouter();
 
   const isValidEmail = (value) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
@@ -65,6 +68,7 @@ export const useSignUpForm = () => {
         throw error; // If there's an error, throw it to be caught below
       }
       console.log("User created successfully:", data);
+      router.replace("/(protected)"); // Redirect to the protected area
     } catch (error) {
       // 5. Handle any errors from the API
       setErrors({ api: error.message });
