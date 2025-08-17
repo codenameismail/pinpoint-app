@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { supabase } from "../utils/supabase";
 
-export const useFavoritesStoreDB = create((set) => ({
+export const useFavoritesStoreDB = create((set, get) => ({
   favorites: [],
   isLoading: false,
   error: null,
@@ -35,6 +35,11 @@ export const useFavoritesStoreDB = create((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  //   Fetch a favorite by ID
+  getFavoriteFromDbById: (id) => {
+    return get().favorites.find((favorite) => favorite.id === id);
   },
 
   // Add a new favorite
