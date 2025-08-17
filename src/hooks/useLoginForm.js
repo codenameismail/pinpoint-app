@@ -5,8 +5,8 @@ import { supabase } from "../utils/supabase";
 import { DUMMY_USERS } from "../data/dummy-user";
 
 export const useLoginForm = () => {
-  const [email, setEmail] = useState(DUMMY_USERS[3].email || "");
-  const [password, setPassword] = useState(DUMMY_USERS[3].password || "");
+  const [email, setEmail] = useState(DUMMY_USERS[0].email || "");
+  const [password, setPassword] = useState(DUMMY_USERS[0].password || "");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
