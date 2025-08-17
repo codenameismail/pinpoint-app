@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { useRouter } from "expo-router";
 import { Alert } from "react-native";
 
-import { useAuthStore } from "../store/useAuthStore";
-
 import { formatDate } from "../utils/helpers";
+import { supabase } from "../utils/supabase";
+
+import { DUMMY_USERS } from "../data/dummy-user";
 
 export const useSignUpForm = () => {
-  const router = useRouter();
-  const authenticate = useAuthStore((state) => state.authenticate);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState(DUMMY_USERS[0].name || "");
+  const [email, setEmail] = useState(DUMMY_USERS[0].email || "");
+  const [password, setPassword] = useState(DUMMY_USERS[0].password || "");
   const [dob, setDob] = useState(formatDate(new Date()));
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,16 +39,6 @@ export const useSignUpForm = () => {
     return validationErrors;
   };
 
-  const clearForm = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setDob(formatDate(new Date()));
-    setShowPassword(false);
-    setErrors({});
-    setLoading(false);
-  };
-
   const handleSignUp = async () => {
     // 1. Clear old errors and start loading
     setErrors({});
@@ -67,13 +55,16 @@ export const useSignUpForm = () => {
       return; // End the function here
     }
 
-    // 4. If validation passes, try to create the user
+    // 4. If validation passes, proceed to create the user
     try {
-      // const result = await createUser(email, password);
-      // authenticate(result); // Store user data in zustand store
-      authenticate("user signed up"); // Store user data in zustand store
-      console.log("Sign up successful, navigating to protected routes");
-      router.replace("/(protected)");
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        throw error; // If there's an error, throw it to be caught below
+      }
+      console.log("User created successfully:", data);
     } catch (error) {
       // 5. Handle any errors from the API
       setErrors({ api: error.message });
@@ -81,7 +72,6 @@ export const useSignUpForm = () => {
       console.error("Create user error:", error);
     } finally {
       setLoading(false); // Stop loading regardless of success or failure
-      clearForm(); // Clear the form inputs
     }
   };
 

@@ -6,36 +6,33 @@ export const useAuthStore = create((set) => ({
   session: null,
   user: null,
   isLoading: true,
-  initialize: async () => {
-    // This is set up once, to get the initial session and set up the listener.
+  initialize: () => {
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       set({ session, user: session?.user ?? null, isLoading: false });
     });
 
-    // Set up a listener for auth state changes
+    // Set up listener for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      set({ session, user: session?.user ?? null });
+      console.log("Auth state changed:", _event, session?.user?.email);
+      set({ session, user: session?.user ?? null, isLoading: false });
     });
 
-    // We can return a cleanup function from the initializer
+    // Return cleanup function
     return () => {
       subscription.unsubscribe();
     };
   },
 }));
 
-// A custom hook to initialize the auth state on app startup.
+// Custom hook to initialize auth state
 export const useInitializeAuth = () => {
   const initialize = useAuthStore((state) => state.initialize);
 
   useEffect(() => {
-    const unsubscribe = initialize();
-
-    // cleanup the subscription on unmount
-    return () => {
-      unsubscribe();
-    };
+    const cleanup = initialize();
+    return cleanup;
   }, [initialize]);
 };
