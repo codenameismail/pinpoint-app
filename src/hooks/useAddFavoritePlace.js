@@ -2,11 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 
-import { useFavoritesStore } from "../store/favoritesStore";
 import { useDraftFavoriteStore } from "../store/draftFavoriteStore";
 import { useLocationStore } from "../store/locationStore";
-
-import { generateId } from "../utils/helpers";
+import { useFavoritesStoreDB } from "../store/favoritesStoreDB";
 
 export const useAddFavoritePlace = () => {
   /*
@@ -38,7 +36,7 @@ export const useAddFavoritePlace = () => {
   );
 
   // Get the add function from store
-  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const addFavoriteToDB = useFavoritesStoreDB((state) => state.addFavoriteToDB);
 
   // Form state
   const [title, setTitle] = useState(draftFavorite.title || "");
@@ -111,28 +109,26 @@ export const useAddFavoritePlace = () => {
   };
 
   // Handle form submission
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!validateInputs()) return; // all the user feedback will come from this call
 
     setIsSubmitting(true);
 
     try {
-      // Create a new favorite
-      const newFavorite = {
-        id: generateId(),
+      // Create the data object matching the store's expectation
+      const newFavoriteData = {
         title,
-        imageUri,
+        image_uri: imageUri, // Match column name
         location: {
           latitude: location.latitude,
           longitude: location.longitude,
-          address: "Some Unknown Address",
-        }, // an object with {latitude, longitude}
+          address: "Some Unknown Address", // You'll fix this later
+        },
         description: description || "No description provided",
-        dateAdded: new Date(),
       };
 
-      // add to store
-      addFavorite(newFavorite);
+      // Call the async store function
+      await addFavoriteToDB(newFavoriteData);
 
       // clear the draft state
       clearDraftFavorite();
@@ -140,12 +136,11 @@ export const useAddFavoritePlace = () => {
       // Navigate back
       router.replace("/(protected)/");
     } catch (error) {
-      Alert.alert("Error", "Failed to save place. Please try again.");
-      console.error(error);
+      Alert.alert("Error", error);
     } finally {
       setIsSubmitting(false);
     }
-  }, [title, imageUri, location, description, addFavorite]);
+  }, [title, imageUri, location, description, addFavoriteToDB]);
 
   return {
     // Form state

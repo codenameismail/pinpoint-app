@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 
-import { useFavoritesStore } from "../../../store/favoritesStore";
+import { useFavoritesStoreDB } from "../../../store/favoritesStoreDB";
 
 import { formatDate } from "../../../utils/helpers";
 import { cn } from "../../../utils/cn";
@@ -22,10 +22,12 @@ import { cn } from "../../../utils/cn";
 const FavoriteDetailScreen = () => {
   const { id } = useLocalSearchParams();
 
-  const getFavoriteById = useFavoritesStore((state) => state.getFavoriteById);
+  const getFavoriteFromDbById = useFavoritesStoreDB(
+    (state) => state.getFavoriteFromDbById,
+  );
 
   // Lookup and memoize the current favorite
-  const favoritePlace = getFavoriteById(id);
+  const favoritePlace = getFavoriteFromDbById(id);
 
   const handleBack = useCallback(() => {
     router.back();
