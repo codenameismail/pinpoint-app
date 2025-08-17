@@ -47,23 +47,10 @@ export const useFavoritesStoreDB = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      // Ensure the user is logged in and get their ID
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-      if (userError || !user) {
-        throw new Error("User not authenticated");
-      }
-      const userId = user.id;
-
-      console.log("Adding favorite for user:", userId, newFavoriteData);
-
       const { data, error } = await supabase
         .from("favorites")
         .insert([
           {
-            user_id: userId, // Use the authenticated user's ID
             // Ensure the keys match database schema
             title: newFavoriteData.title,
             image_uri: newFavoriteData.image_uri,
