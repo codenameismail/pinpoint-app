@@ -60,7 +60,7 @@ const FavoriteDetailScreen = () => {
   }, [favoritePlace]);
 
   const dateAdded = useMemo(
-    () => (favoritePlace ? formatDate(favoritePlace.dateAdded) : ""),
+    () => (favoritePlace ? formatDate(favoritePlace.created_at) : ""),
     [favoritePlace],
   );
 
