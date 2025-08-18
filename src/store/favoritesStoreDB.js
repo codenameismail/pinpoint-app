@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { supabase } from "../utils/supabase";
+import { deleteImage } from "../utils/supabaseImageStorage";
 
 export const useFavoritesStoreDB = create((set, get) => ({
   favorites: [],
@@ -19,13 +20,6 @@ export const useFavoritesStoreDB = create((set, get) => ({
       if (error) {
         throw error;
       }
-
-      favorites = favorites.map((fav) => {
-        return {
-          ...fav,
-          imageUri: fav.image_uri,
-        };
-      });
 
       set({ favorites: favorites || [], error: null });
     } catch (error) {
@@ -85,13 +79,32 @@ export const useFavoritesStoreDB = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
+      // First get the favorite so that we can use the image URL
+      const favoriteToDelete = get().favorites.find((fav) => fav.id === id);
+
+      if (!favoriteToDelete) {
+        throw new Error("Favorite not found");
+      }
+
+      // Delete from database first
       const { error } = await supabase.from("favorites").delete().eq("id", id);
 
       if (error) throw error;
 
+      // Update local state immediately (optimistic update)
       set((state) => ({
         favorites: state.favorites.filter((item) => item.id !== id),
       }));
+
+      // Try to delete the image from storage (non-blocking)
+      if (favoriteToDelete.image_uri) {
+        const deleteSuccess = await deleteImage(favoriteToDelete.image_uri);
+        if (!deleteSuccess) {
+          console.warn(
+            "Image deletion failed, but favorite was removed from DB.",
+          );
+        }
+      }
     } catch (error) {
       const errorMessage = "Failed to add favorite.";
       console.error(errorMessage, error);
