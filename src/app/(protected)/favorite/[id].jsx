@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
@@ -10,37 +11,39 @@ import {
   Alert,
   ImageBackground,
 } from "react-native";
-
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-
 import { useFavoritesStoreDB } from "../../../store/favoritesStoreDB";
-
 import { formatDate } from "../../../utils/helpers";
-import { cn } from "../../../utils/cn";
 
 const FavoriteDetailScreen = () => {
   const { id } = useLocalSearchParams();
 
+  // const { getFavoriteFromDbById, removeFavoriteFromDB } = useFavoritesStoreDB(
+  //   (state) => ({
+  //     getFavoriteFromDbById: state.getFavoriteFromDbById,
+  //     removeFavoriteFromDB: state.removeFavoriteFromDB,
+  //   }),
+  // );
   const getFavoriteFromDbById = useFavoritesStoreDB(
     (state) => state.getFavoriteFromDbById,
   );
+  const removeFavoriteFromDB = useFavoritesStoreDB(
+    (state) => state.removeFavoriteFromDB,
+  );
 
-  // Lookup and memoize the current favorite
   const favoritePlace = getFavoriteFromDbById(id);
 
-  const handleBack = useCallback(() => {
-    router.back();
-  }, []);
+  const handleBack = () => router.back();
 
-  const handleEdit = useCallback(() => {
+  const handleEdit = () => {
     if (!favoritePlace) return;
-    // Navigate to edit screen or show edit modal
     console.log("Edit favorite:", favoritePlace.id);
-  }, [favoritePlace]);
+  };
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = () => {
     if (!favoritePlace) return;
+
     Alert.alert(
       "Delete Favorite",
       "Are you sure you want to remove this place from your favorites?",
@@ -49,32 +52,25 @@ const FavoriteDetailScreen = () => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            // Handle delete logic here
-            console.log("Delete favorite:", favoritePlace.id);
-            router.back();
+          onPress: async () => {
+            try {
+              await removeFavoriteFromDB(favoritePlace.id);
+              router.back();
+            } catch (error) {
+              Alert.alert(
+                "Error",
+                `Failed to delete favorite: ${error.message || error}`,
+              );
+            }
           },
         },
       ],
     );
-  }, [favoritePlace]);
+  };
 
-  const dateAdded = useMemo(
-    () => (favoritePlace ? formatDate(favoritePlace.created_at) : ""),
-    [favoritePlace],
-  );
+  const formatCoordinates = (decimals) =>
+    `${favoritePlace.location.latitude.toFixed(decimals)}, ${favoritePlace.location.longitude.toFixed(decimals)}`;
 
-  const displayCoordinate = useCallback(
-    (numOfDecimals) =>
-      favoritePlace
-        ? `${favoritePlace.location.latitude.toFixed(numOfDecimals)}, ${favoritePlace.location.longitude.toFixed(numOfDecimals)}`
-        : "",
-    [favoritePlace],
-  );
-
-  const imageSource = { uri: favoritePlace.image_uri }
-
-  // Fallback UI if param is missing or not found
   if (!id || !favoritePlace) {
     return (
       <>
@@ -97,13 +93,12 @@ const FavoriteDetailScreen = () => {
   return (
     <>
       <StatusBar style="light" />
-
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentInsetAdjustmentBehavior="never"
       >
-        {/* Header with Back Button */}
+        {/* Back Button */}
         <View className="absolute left-4 top-16 z-10">
           <Pressable
             onPress={handleBack}
@@ -114,76 +109,57 @@ const FavoriteDetailScreen = () => {
         </View>
 
         {/* Hero Image */}
-        <View className="relative">
-          <ImageBackground
-            source={imageSource}
-            className="h-96 w-full"
-            resizeMode="cover"
-          >
-            <LinearGradient
-              colors={["transparent", "rgba(0,0,0,0.7)"]}
-              style={{ flex: 1 }}
-            />
-          </ImageBackground>
-        </View>
+        <ImageBackground
+          source={{ uri: favoritePlace.image_uri }}
+          className="h-96 w-full"
+          resizeMode="cover"
+        >
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.7)"]}
+            style={{ flex: 1 }}
+          />
+        </ImageBackground>
 
-        {/* Content Container */}
+        {/* Content */}
         <View className="-mt-8 flex-1 rounded-t-[30px] bg-white px-6 pt-8">
-          {/* Title and Actions */}
-          <View className="mb-6">
-            {/* Title of the favorite place and buttons for editing and deleting. */}
-            <View className="mb-4 flex-row items-start justify-between">
-              <View className="flex-1 pr-4">
-                <Text className="text-3xl font-bold leading-tight text-gray-900">
-                  {favoritePlace.title}
+          {/* Header */}
+          <View className="mb-6 flex-row items-start justify-between">
+            <View className="flex-1 pr-4">
+              <Text className="text-3xl font-bold leading-tight text-gray-900">
+                {favoritePlace.title}
+              </Text>
+              <View className="mt-2 flex-row items-center">
+                <Ionicons name="location-outline" size={18} color="#6B7280" />
+                <Text className="ml-2 text-base text-gray-600">
+                  {favoritePlace.location.address}
                 </Text>
-              </View>
-
-              <View className="flex-row gap-3">
-                {/* Edit Button */}
-                <Pressable
-                  onPress={handleEdit}
-                  className={cn(
-                    "h-12 w-12 items-center justify-center rounded-full",
-                    "bg-blue-50 active:scale-95 active:bg-blue-100",
-                  )}
-                >
-                  <Ionicons name="pencil" size={20} color="#3B82F6" />
-                </Pressable>
-
-                {/* Delete Button */}
-                <Pressable
-                  onPress={handleDelete}
-                  className={cn(
-                    "h-12 w-12 items-center justify-center rounded-full",
-                    "bg-red-50 active:scale-95 active:bg-red-100",
-                  )}
-                >
-                  <Ionicons name="trash-outline" size={20} color="#EF4444" />
-                </Pressable>
               </View>
             </View>
 
-            {/* Location */}
-            <View className="flex-row items-center">
-              <Ionicons name="location-outline" size={18} color="#6B7280" />
-              <Text className="ml-2 flex-1 text-base text-gray-600">
-                {favoritePlace.location.address}
-              </Text>
+            {/* Action Buttons */}
+            <View className="flex-row gap-3">
+              <Pressable
+                onPress={handleEdit}
+                className="h-12 w-12 items-center justify-center rounded-full bg-blue-50 active:scale-95"
+              >
+                <Ionicons name="pencil" size={20} color="#3B82F6" />
+              </Pressable>
+              <Pressable
+                onPress={handleDelete}
+                className="h-12 w-12 items-center justify-center rounded-full bg-red-50 active:scale-95"
+              >
+                <Ionicons name="trash-outline" size={20} color="#EF4444" />
+              </Pressable>
             </View>
           </View>
 
-          {/* Map Container (placeholder) */}
-          <View className="mb-6">
-            <View className="h-48 w-full overflow-hidden rounded-2xl bg-blue-100">
-              <View className="flex-1 items-center justify-center">
-                <Ionicons name="map" size={48} color="#3B82F6" />
-                <Text className="mt-2 font-medium text-blue-700">Map View</Text>
-                <Text className="px-4 text-center text-sm text-blue-600">
-                  {displayCoordinate(6)}
-                </Text>
-              </View>
-            </View>
+          {/* Map Placeholder */}
+          <View className="mb-6 h-48 w-full items-center justify-center overflow-hidden rounded-2xl bg-blue-100">
+            <Ionicons name="map" size={48} color="#3B82F6" />
+            <Text className="mt-2 font-medium text-blue-700">Map View</Text>
+            <Text className="text-sm text-blue-600">
+              {formatCoordinates(6)}
+            </Text>
           </View>
 
           {/* Description */}
@@ -201,25 +177,30 @@ const FavoriteDetailScreen = () => {
             <Text className="mb-3 text-lg font-semibold text-gray-900">
               Details
             </Text>
-
             <View className="gap-y-3">
-              <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
-                <Text className="text-gray-600">Added on</Text>
-                <Text className="font-medium text-gray-900">{dateAdded}</Text>
-              </View>
-
-              <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
-                <Text className="text-gray-600">Coordinates</Text>
-                <Text className="font-medium text-gray-900">
-                  {displayCoordinate(4)}
-                </Text>
-              </View>
+              <DetailRow
+                label="Added on"
+                value={formatDate(favoritePlace.created_at)}
+              />
+              <DetailRow label="Coordinates" value={formatCoordinates(4)} />
             </View>
           </View>
         </View>
       </ScrollView>
     </>
   );
+};
+
+const DetailRow = ({ label, value }) => (
+  <View className="flex-row items-center justify-between border-b border-gray-100 py-3">
+    <Text className="text-gray-600">{label}</Text>
+    <Text className="font-medium text-gray-900">{value}</Text>
+  </View>
+);
+
+DetailRow.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 export default FavoriteDetailScreen;
