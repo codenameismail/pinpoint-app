@@ -6,7 +6,7 @@ import { useDraftFavoriteStore } from "../store/draftFavoriteStore";
 import { useLocationStore } from "../store/locationStore";
 import { useFavoritesStoreDB } from "../store/favoritesStoreDB";
 
-import { uploadImage } from "../utils/imageUploader";
+import { uploadImage } from "../utils/supabaseImageStorage";
 
 export const useAddFavoritePlace = () => {
   /*
@@ -118,9 +118,9 @@ export const useAddFavoritePlace = () => {
 
     try {
       // Upload image first and get the public URL
-      console.log("Uploading image...");
+      console.log("Uploading image to supabase...");
       const imageUrl = await uploadImage(imageUri);
-      console.log("Image uploaded successfully:", imageUrl);
+      console.log("Image uploaded successfully!");
 
       // Create the data object matching the store's expectation
       const newFavoriteData = {
