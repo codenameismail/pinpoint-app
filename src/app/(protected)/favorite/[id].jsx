@@ -72,11 +72,7 @@ const FavoriteDetailScreen = () => {
     [favoritePlace],
   );
 
-  const isImageUriNumber = typeof favoritePlace.imageUri === "number";
-  // Determine the image source based on what's available
-  const imageSource = isImageUriNumber
-    ? favoritePlace.imageUri
-    : { uri: favoritePlace.imageUri };
+  const imageSource = { uri: favoritePlace.image_uri }
 
   // Fallback UI if param is missing or not found
   if (!id || !favoritePlace) {
@@ -135,6 +131,7 @@ const FavoriteDetailScreen = () => {
         <View className="-mt-8 flex-1 rounded-t-[30px] bg-white px-6 pt-8">
           {/* Title and Actions */}
           <View className="mb-6">
+            {/* Title of the favorite place and buttons for editing and deleting. */}
             <View className="mb-4 flex-row items-start justify-between">
               <View className="flex-1 pr-4">
                 <Text className="text-3xl font-bold leading-tight text-gray-900">
@@ -143,6 +140,7 @@ const FavoriteDetailScreen = () => {
               </View>
 
               <View className="flex-row gap-3">
+                {/* Edit Button */}
                 <Pressable
                   onPress={handleEdit}
                   className={cn(
@@ -153,6 +151,7 @@ const FavoriteDetailScreen = () => {
                   <Ionicons name="pencil" size={20} color="#3B82F6" />
                 </Pressable>
 
+                {/* Delete Button */}
                 <Pressable
                   onPress={handleDelete}
                   className={cn(

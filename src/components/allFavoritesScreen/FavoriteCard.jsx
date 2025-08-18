@@ -14,12 +14,7 @@ const FavoriteCard = ({ favorite }) => {
     });
   };
 
-  const isImageUriNumber = typeof favorite.imageUri === "number";
-
-  // Determine the image source based on what's available
-  const imageSource = isImageUriNumber
-    ? favorite.imageUri
-    : { uri: favorite.imageUri };
+  const imageSource = { uri: favorite.image_uri };
 
   // console.log("Image Source for fav card: ", favorite);
   const address =
@@ -59,7 +54,7 @@ FavoriteCard.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     image: PropTypes.any.isRequired,
-    imageUri: PropTypes.string.isRequired,
+    image_uri: PropTypes.string.isRequired,
     location: PropTypes.shape({
       latitude: PropTypes.number.isRequired,
       longitude: PropTypes.number.isRequired,
