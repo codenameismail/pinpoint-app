@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, ActivityIndicator } from "react-native";
+
+import { useFavoritesStoreDB } from "../../store/favoritesStoreDB";
 
 import FavoriteList from "../../components/allFavoritesScreen/FavoriteList";
 import FabButton from "../../components/allFavoritesScreen/FabButton";
-
-import { useFavoritesStoreDB } from "../../store/favoritesStoreDB";
-import { Text, ActivityIndicator } from "react-native";
 
 export default function AllFavoritesScreen() {
   const favorites = useFavoritesStoreDB((state) => state.favorites);
