@@ -41,11 +41,11 @@ export const useAddFavoritePlace = () => {
   const addFavoriteToDB = useFavoritesStoreDB((state) => state.addFavoriteToDB);
 
   // Form state
-  const [title, setTitle] = useState(draftFavorite.title || "");
+  const [title, setTitle] = useState(draftFavorite.title || "Some Place");
   const [imageUri, setImageUri] = useState(draftFavorite.imageUri || null);
   const [location, setLocation] = useState(pickedLocation || null);
   const [description, setDescription] = useState(
-    draftFavorite.description || "",
+    draftFavorite.description || "No description provided",
   );
 
   // UI state
