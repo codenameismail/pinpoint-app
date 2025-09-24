@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { useRouter } from "expo-router";
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image as RNImage, Pressable } from "react-native";
 
 const FavoriteCard = ({ favorite }) => {
   const router = useRouter();
@@ -29,7 +29,7 @@ const FavoriteCard = ({ favorite }) => {
     >
       {/* Image Container */}
       <View className="relative mb-3 w-full">
-        <Image
+        <RNImage
           source={imgSource}
           className="h-40 w-full rounded-2xl"
           resizeMode="cover"
