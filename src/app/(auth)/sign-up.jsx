@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import {
   View,
   Text,
-  TextInput,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -26,8 +25,6 @@ const CreateAccountScreen = () => {
     setPassword,
     email,
     setEmail,
-    dob,
-    setDob,
     showPassword,
     setShowPassword,
     loading,
@@ -66,7 +63,7 @@ const CreateAccountScreen = () => {
               label="Full name"
               value={name}
               onChangeText={setName}
-              placeholder="John Doe"
+              placeholder="Mohammed Ali"
               error={errors.name}
               inputProps={{
                 autoCapitalize: "words",
@@ -108,27 +105,6 @@ const CreateAccountScreen = () => {
                 returnKeyType: "done",
               }}
             />
-
-            {/* Date of Birth */}
-            <View className="gap-y-2">
-              <Text className="text-sm font-medium text-slate-700">
-                Date of birth
-              </Text>
-              <TextInput
-                className="h-12 rounded-xl border border-slate-200 bg-white px-4 text-base text-slate-900"
-                placeholder="YYYY-MM-DD"
-                placeholderTextColor="#94a3b8"
-                value={dob}
-                onChangeText={setDob}
-                autoCapitalize="none"
-                keyboardType="numbers-and-punctuation"
-                returnKeyType="done"
-              />
-
-              <Text className="-mt-1 text-xs text-slate-500">
-                For a personalized experience. You must be at least 13.
-              </Text>
-            </View>
 
             {/* CTA and Secondary action */}
             <AuthCTA

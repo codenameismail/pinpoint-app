@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 
-import { formatDate } from "../utils/helpers";
 import { supabase } from "../utils/supabase";
 
-import { DUMMY_USERS } from "../data/dummy-user";
 import { useRouter } from "expo-router";
 
 export const useSignUpForm = () => {
-  const [name, setName] = useState(DUMMY_USERS[0].name || "");
-  const [email, setEmail] = useState(DUMMY_USERS[0].email || "");
-  const [password, setPassword] = useState(DUMMY_USERS[0].password || "");
-  const [dob, setDob] = useState(formatDate(new Date()));
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -86,8 +83,6 @@ export const useSignUpForm = () => {
     setPassword,
     email,
     setEmail,
-    dob,
-    setDob,
     showPassword,
     setShowPassword,
     loading,
