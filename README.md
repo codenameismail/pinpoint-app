@@ -137,10 +137,6 @@ This project was built as a learning exercise to master React Native development
 - [ ] Offline map caching
 - [ ] Push notifications for location reminders
 
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
 ---
 
 Built with ❤️ as a React Native learning project
