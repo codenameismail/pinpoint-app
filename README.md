@@ -39,8 +39,8 @@ _Add screenshots here when ready_
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/pin-point.git
-   cd pin-point
+   git clone https://github.com/codenameismail/pinpoint-app.git
+   cd pinpoint-app
    ```
 
 2. **Install dependencies**
