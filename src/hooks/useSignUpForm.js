@@ -4,6 +4,7 @@ import { Alert } from "react-native";
 import { supabase } from "../utils/supabase";
 
 import { useRouter } from "expo-router";
+import { AuthError } from "@supabase/supabase-js";
 
 export const useSignUpForm = () => {
   const [name, setName] = useState("");
@@ -70,7 +71,11 @@ export const useSignUpForm = () => {
       // 5. Handle any errors from the API
       setErrors({ api: error.message });
       Alert.alert("Error", error.message);
-      console.error("Create user error:", error);
+      if (error instanceof AuthError) {
+        console.error("Supabase AuthError - Create user error:", error);
+      } else {
+        console.error("Error - Create user error:", error);
+      }
     } finally {
       setLoading(false); // Stop loading regardless of success or failure
     }

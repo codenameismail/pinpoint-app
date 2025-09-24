@@ -90,6 +90,10 @@ const FavoriteDetailScreen = () => {
     );
   }
 
+  const imgSource = favoritePlace.imageUri
+    ? favoritePlace.imageUri
+    : { uri: favoritePlace.image_uri };
+
   return (
     <>
       <StatusBar style="light" />
@@ -110,7 +114,8 @@ const FavoriteDetailScreen = () => {
 
         {/* Hero Image */}
         <ImageBackground
-          source={{ uri: favoritePlace.image_uri }}
+          // source={{ uri: favoritePlace.image_uri }}
+          source={imgSource}
           className="h-96 w-full"
           resizeMode="cover"
         >

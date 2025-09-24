@@ -64,7 +64,17 @@ export const useLoginForm = () => {
     } catch (error) {
       // 5. Handle any errors from the API
       setErrors({ api: error.message });
-      Alert.alert("Error", error.message);
+      Alert.alert(error.message, "Create an account if you do not have one", [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Sign up",
+          onPress: () => {
+            router.push("/sign-up");
+          },
+          style: "default",
+          isPreferred: true,
+        },
+      ]);
       console.error("Login error:", error.message);
     } finally {
       setLoading(false); // Stop loading regardless of success or failure

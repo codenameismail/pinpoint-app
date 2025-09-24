@@ -1,4 +1,4 @@
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { decode } from "base64-arraybuffer";
 import { supabase } from "./supabase";
 
@@ -21,7 +21,7 @@ export const uploadImage = async (uri, bucketName = "favorites_images") => {
 
     // Read the file and prepare for upload
     const base64 = await FileSystem.readAsStringAsync(uri, {
-      encoding: FileSystem.EncodingType.Base64,
+      encoding: "base64",
     });
     const arrayBuffer = decode(base64);
 

@@ -2,8 +2,10 @@ import { create } from "zustand";
 import { supabase } from "../utils/supabase";
 import { deleteImage } from "../utils/supabaseImageStorage";
 
+import { favorites as initialFavorites } from "../data/favorites";
+
 export const useFavoritesStoreDB = create((set, get) => ({
-  favorites: [],
+  favorites: initialFavorites,
   isLoading: false,
   error: null,
 
@@ -12,7 +14,7 @@ export const useFavoritesStoreDB = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      let { data: favorites, error } = await supabase
+      let { data: savedFavorites, error } = await supabase
         .from("favorites")
         .select("*")
         .order("created_at", { ascending: false });
@@ -21,7 +23,12 @@ export const useFavoritesStoreDB = create((set, get) => ({
         throw error;
       }
 
-      set({ favorites: favorites || [], error: null });
+      // Replace favorites with fresh data: saved favorites + initial favorites
+      set(() => ({
+        favorites: [...savedFavorites, ...initialFavorites],
+        error: null,
+      }));
+      console.log("State in favoritesDB: ", get().favorites);
     } catch (error) {
       const errorMessage = "Failed to fetch favorites.";
       console.error(errorMessage, error);
