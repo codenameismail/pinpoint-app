@@ -28,7 +28,6 @@ export const useFavoritesStoreDB = create((set, get) => ({
         favorites: [...savedFavorites, ...initialFavorites],
         error: null,
       }));
-      console.log("State in favoritesDB: ", get().favorites);
     } catch (error) {
       const errorMessage = "Failed to fetch favorites.";
       console.error(errorMessage, error);
